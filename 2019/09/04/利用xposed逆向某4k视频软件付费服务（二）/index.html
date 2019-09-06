@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="安卓逆向,">
 
 
 
@@ -79,14 +79,27 @@
 
 
 
+<meta name="description" content="上一篇利用xposed逆向某4k视频付费服务主要讲了一些破解的准备工作，这一篇将会进入重点，分为两个部分，一个是xposed的开发准备，一个是结合代码进行hook">
+<meta name="keywords" content="安卓逆向">
 <meta property="og:type" content="article">
 <meta property="og:title" content="利用xposed逆向某4k视频软件付费服务（二）">
 <meta property="og:url" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/index.html">
 <meta property="og:site_name" content="安卓小屋">
+<meta property="og:description" content="上一篇利用xposed逆向某4k视频付费服务主要讲了一些破解的准备工作，这一篇将会进入重点，分为两个部分，一个是xposed的开发准备，一个是结合代码进行hook">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-09-04T07:24:32.346Z">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-154921.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906155210116.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-164417.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-171503.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-172718.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906173404106.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906173849407.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-174656.gif">
+<meta property="og:updated_time" content="2019-09-06T09:49:31.785Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="利用xposed逆向某4k视频软件付费服务（二）">
+<meta name="twitter:description" content="上一篇利用xposed逆向某4k视频付费服务主要讲了一些破解的准备工作，这一篇将会进入重点，分为两个部分，一个是xposed的开发准备，一个是结合代码进行hook">
+<meta name="twitter:image" content="http://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-154921.gif">
 
 
 
@@ -315,7 +328,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0字
+                  2k字
                 </span>
               
 
@@ -331,7 +344,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1分钟
+                  8分钟
                 </span>
               
             </div>
@@ -352,7 +365,92 @@
       
 
       
-        
+        <p>上一篇<strong><a href="[https://nbwzlyd.github.io/2019/09/04/%E5%88%A9%E7%94%A8xposed%E9%80%86%E5%90%91%E6%9F%904k%E8%A7%86%E9%A2%91%E8%BD%AF%E4%BB%B6%E4%BB%98%E8%B4%B9%E6%9C%8D%E5%8A%A1/](https://nbwzlyd.github.io/2019/09/04/利用xposed逆向某4k视频软件付费服务/)" "">利用xposed逆向某4k视频付费服务</a></strong>主要讲了一些破解的准备工作，这一篇将会进入重点，分为两个部分，一个是xposed的开发准备，一个是结合代码进行hook</p>
+<a id="more"></a>
+
+<h1 id="Xposed的开发"><a href="#Xposed的开发" class="headerlink" title="Xposed的开发"></a>Xposed的开发</h1><p>我们可以再<a href="https://bintray.com/rovo89/de.robv.android.xposed/api/82," "" target="_blank" rel="noopener"><em>这里</em></a>下载到最新的xposed.jar 文件，网上有教程是下载jar包放到工程的lib文件夹下，我们不这么做，用gradle方式进行引用</p>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p>Mac</p>
+<p>Android Studio 3.4.2 </p>
+<p>夜神模拟器Mac版 安卓版本4.4</p>
+<p>xposed框架2.7版本（只有这个版本支持安卓4.4）</p>
+<h2 id="引入jar包"><a href="#引入jar包" class="headerlink" title="引入jar包"></a>引入jar包</h2><p>在app目录下的build.gradle 的dependencies中添加如下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compileOnly <span class="string">'de.robv.android.xposed:api:82'</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是，由于2.7版本的xposed框架自带了xposed.jar，所以我们这里只需要compileOnly即可，否则会报错，官方文档是 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">compile <span class="string">'de.robv.android.xposed:api:82'</span></span><br></pre></td></tr></table></figure>
+
+<p>这个要根据自己实际情况来酌情处理，关于 compileOnly 和compile 区别，可以查看</p>
+<p><a href="https://blog.csdn.net/wangliblog/article/details/81366095" "" target="_blank" rel="noopener"><em>gradle 新的依赖方式 implementation、api、compileOnly</em></a></p>
+<h3 id="成为xposed模块"><a href="#成为xposed模块" class="headerlink" title="成为xposed模块"></a>成为xposed模块</h3><p>在mainfest文件的application标签下添加如下代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&lt;application</span><br><span class="line">        android:name=&quot;.base.BaseApplication&quot;</span><br><span class="line">        android:icon=&quot;@mipmap/ic_launcher&quot;</span><br><span class="line">        android:label=&quot;@string/app_name&quot;&gt;</span><br><span class="line">        &lt;meta-data</span><br><span class="line">            android:name=&quot;xposedmodule&quot;</span><br><span class="line">            android:value=&quot;true&quot;/&gt;</span><br><span class="line">        &lt;meta-data</span><br><span class="line">            android:name=&quot;xposeddescription&quot;</span><br><span class="line">            android:value=&quot;模块描述文字&quot;/&gt;//会在模块里显示你的xposed具体描述</span><br><span class="line">        &lt;meta-data</span><br><span class="line">            android:name=&quot;xposedminversion&quot;</span><br><span class="line">            android:value=&quot;53&quot;/&gt;//由于2.7版本的xposed不支持82版本所以这里写53，支持的最低版本是53</span><br><span class="line">&lt;/application&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样，再gradle sync一下，我们的准备工作就完毕了。</p>
+<h3 id="进入其他应用的进程"><a href="#进入其他应用的进程" class="headerlink" title="进入其他应用的进程"></a>进入其他应用的进程</h3><p>在这里，将会进入我们的实际开发工作。上篇我们了解到，我们第一步需要hook掉用户的登录操作。</p>
+<p>创建一个类FourK_Xposed，继承IXposedHookLoadPackage类，覆写handleLoadPackage方法，xposed的该方法在任何应用启动时都会被调用，故可以进入任何应用程序的进程，但是一般只针对某个特定的应用，例如，当前应用</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FourK_Xposed</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(XC_LoadPackage.LoadPackageParam lpparam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">        XposedBridge.log(<span class="string">"FourK_Xposed 模块生效"</span>);<span class="comment">//进入这段代码说明我们的xposed模块生效了</span></span><br><span class="line">        <span class="comment">//先判断是不是我们想要hook的应用，以包名判断,不是的话直接return</span></span><br><span class="line">        <span class="keyword">if</span> (!TextUtils.equals(lpparam.packageName,<span class="string">"com.evo.watchbar.tv"</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//hook 登录</span></span><br><span class="line"> XposedHelpers.findAndHookMethod(lpparam.classLoader.loadClass(<span class="string">"com.evo.watchbar.tv.ui.activity.VRMovieDetailActivity"</span>), <span class="string">"checkLogin"</span>, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">                param.setResult(<span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在handleLoadPackage方法中，调用findAndHookMethod方法，并重写afterHookedMethod方法，由于检查登录的逻辑很简单，就在VRMovieDetailActivity中，所以我们只需要传入要hook的类以及方法名即可。</p>
+<p>看一眼源码，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">checkLogin</span><span class="params">()</span></span></span><br><span class="line"><span class="function">  </span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> bool = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">if</span> (MyStorage.user == <span class="keyword">null</span>)</span><br><span class="line">    &#123;</span><br><span class="line">      errorAlert(<span class="string">"请先登录"</span>, <span class="keyword">true</span>);</span><br><span class="line">      <span class="keyword">new</span> Handler().postDelayed(<span class="keyword">new</span> Runnable()</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">          Intent localIntent = <span class="keyword">new</span> Intent(VRMovieDetailActivity.<span class="keyword">this</span>, PersonCenterActivity.class);</span><br><span class="line">          localIntent.putExtra(<span class="string">"forResult"</span>, <span class="keyword">true</span>);</span><br><span class="line">          localIntent.putExtra(<span class="string">"type"</span>, <span class="number">1</span>);</span><br><span class="line">          VRMovieDetailActivity.<span class="keyword">this</span>.startActivityForResult(localIntent, <span class="number">100</span>);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;, <span class="number">500L</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> (;;)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">return</span> bool;</span><br><span class="line">      bool = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>源码的逻辑看起来会很奇怪，不如直接smali看起来容易理解 因为有一段这样的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (;;)</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">return</span> bool;</span><br><span class="line">      bool = <span class="keyword">false</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个不用管，通过smali代码可以猜到，如果是vip，那么这个返回值一定是false，（很奇怪是吧，逻辑就是这样的）</p>
+<p>所以复写</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">               <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">               param.setResult(<span class="keyword">false</span>);</span><br><span class="line">               &#125;</span><br></pre></td></tr></table></figure>
+
+<p>param.setResult(false);即可</p>
+<p>通常情况下这样就可以了，打包模块，将模块推送到手机安装，这时候xposed模块会提示你重启，选择软重启即可。</p>
+<p>然后进入日志选项，看看我们的应用生效没</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-154921.gif" alt="Jietu20190906-154921"></p>
+<p>可以看到xposed模块已经生效，但是hook生效了吗？进入应用验证，发现还是要登录，截图就不发了，</p>
+<p>打开xposed日志我们发现这样的报错</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906155210116.png" alt="image-20190906155210116"></p>
+<p>没有找到<strong>com.evo.watchbar.tv.ui.activity.VRMovieDetailActivity</strong>这个类，事实上这个类是真实存在的，不是找不到，而是被腾讯加固给“隐藏”了</p>
+<h1 id="解决腾讯加固导致的classNotFound问题"><a href="#解决腾讯加固导致的classNotFound问题" class="headerlink" title="解决腾讯加固导致的classNotFound问题"></a>解决腾讯加固导致的classNotFound问题</h1><p>通常情况下，如果代码没有进行加固，我们只需要按照上面的步骤解决即可，但是这个应用腾讯加固了，直接这么走就行不通了，原因在于apk经过加固，必须要用壳的ClassLoader来加载类，因为真正的代码是腾讯加固程序启动后它去加载真正的dex文件的。</p>
+<p>所以第一步我们要hook TxAppEntry 的 attachBaseContext 方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">hookClassLoader</span><span class="params">(<span class="keyword">final</span> XC_LoadPackage.LoadPackageParam loadPackageParam)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (classLoader == <span class="keyword">null</span>)&#123;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">//腾讯加固，需要获取对应classloader</span></span><br><span class="line">                XposedHelpers.findAndHookMethod(<span class="string">"com.tencent.StubShell.TxAppEntry"</span>, loadPackageParam.classLoader,</span><br><span class="line">                        <span class="string">"attachBaseContext"</span>, Context.class, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">                            <span class="meta">@Override</span></span><br><span class="line">                            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                                <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">                                <span class="comment">//获取到Context对象，通过这个对象来获取classloader</span></span><br><span class="line">                                Context context = (Context) param.args[<span class="number">0</span>];</span><br><span class="line">                                <span class="comment">//获取classloader，之后hook加固后的就使用这个classloader</span></span><br><span class="line">                                 context.getClassLoader();<span class="comment">//这个classLoader才是真正需要的classLoader</span></span><br><span class="line">                            &#125;</span><br><span class="line"></span><br><span class="line">                        &#125;);</span><br><span class="line">            &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>并修改代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FourK_Xposed</span> <span class="keyword">implements</span> <span class="title">IXposedHookLoadPackage</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">handleLoadPackage</span><span class="params">(XC_LoadPackage.LoadPackageParam lpparam)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line"></span><br><span class="line">        XposedBridge.log(<span class="string">"FourK_Xposed 模块生效"</span>);</span><br><span class="line">        <span class="comment">//先判断是不是我们想要hook的应用，以包名判断</span></span><br><span class="line">        <span class="keyword">if</span> (!TextUtils.equals(lpparam.packageName,<span class="string">"com.evo.watchbar.tv"</span>))&#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//腾讯加固，需要获取对应classloader</span></span><br><span class="line">        XposedHelpers.findAndHookMethod(<span class="string">"com.tencent.StubShell.TxAppEntry"</span>, lpparam.classLoader,</span><br><span class="line">                <span class="string">"attachBaseContext"</span>, Context.class, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">                    <span class="meta">@Override</span></span><br><span class="line">                    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                        <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">                        <span class="comment">//获取到Context对象，通过这个对象来获取classloader</span></span><br><span class="line">                        Context context = (Context) param.args[<span class="number">0</span>];</span><br><span class="line">                        <span class="comment">//获取classloader，之后hook加固后的就使用这个classloader</span></span><br><span class="line">                        context.getClassLoader();</span><br><span class="line">                        hookLogin(context.getClassLoader());</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">hookLogin</span><span class="params">(ClassLoader classLoader)</span></span>&#123;</span><br><span class="line">        <span class="comment">//hook 登录</span></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            XposedHelpers.findAndHookMethod(classLoader.loadClass(<span class="string">"com.evo.watchbar.tv.ui.activity.VRMovieDetailActivity"</span>), <span class="string">"checkLogin"</span>, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                    <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">                    param.setResult(<span class="keyword">true</span>);</span><br><span class="line">                    XposedBridge.log(<span class="string">"hook成功"</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>打包验证</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-164417.gif" alt></p>
+<p>可以看到会员免费看一闪而过，至于为什么后面又出现让你登录的界面，是因为在播放界面他又验证有没有登录了，破解方法一致，这里就不再演示了，如果你想一劳永逸，可以从</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">MyStorage.user == <span class="keyword">null</span></span><br></pre></td></tr></table></figure>
+
+<p>这段代码入手，</p>
+<p>hook方式就是常用的反射，代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cls = classLoader.loadClass(<span class="string">"com.evo.watchbar.tv.storage.MyStorage"</span>);</span><br><span class="line">           Field field = cls.getField(<span class="string">"user"</span>);</span><br><span class="line">           Class User = classLoader.loadClass(<span class="string">"com.evo.m_base.bean.User"</span>);</span><br><span class="line">           field.set(cls.newInstance(),User.newInstance());</span><br></pre></td></tr></table></figure>
+
+<p>只要保证user!=null 即可</p>
+<p>这样，就不会再提示登录了。</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-171503.gif" alt></p>
+<h1 id="破解VIP"><a href="#破解VIP" class="headerlink" title="破解VIP"></a>破解VIP</h1><p>有了上文的铺垫，Vip的破解也就很容易了，在源码中我们多次看到这个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserUtils.checkVIP()</span><br></pre></td></tr></table></figure>
+
+<p>所以从这段代码入手就行了，代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">hookVip</span><span class="params">(ClassLoader classLoader)</span>  </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        XposedHelpers.findAndHookMethod(classLoader.loadClass(<span class="string">"com.evo.watchbar.tv.utils.UserUtils"</span>), <span class="string">"checkVIP"</span>, <span class="keyword">new</span> XC_MethodHook() &#123;</span><br><span class="line">            <span class="meta">@Override</span></span><br><span class="line">            <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">afterHookedMethod</span><span class="params">(MethodHookParam param)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">                <span class="keyword">super</span>.afterHookedMethod(param);</span><br><span class="line">                param.setResult(<span class="keyword">true</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (ClassNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编写完毕后你就会神奇的发现，付费按钮消失了，只有一个播放按钮，点击播放按钮看一下效果</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-172718.gif" alt></p>
+<p>WTF,竟然显示会员才能享受服务，难道有服务端验证？？</p>
+<p>如果真的有服务端验证，那我们真的将前功尽弃。所以，我们现在必须得抓包看看</p>
+<h1 id="抓包破解vip"><a href="#抓包破解vip" class="headerlink" title="抓包破解vip"></a>抓包破解vip</h1><p>抓包的方法这里就不多说了，fiddler或者Charles都可以，我这里用的Charles</p>
+<p>在抓包界面中我们看到</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906173404106.png" alt="image-20190906173404106"></p>
+<p>有一个sourceUrl字段，这个字段以.mp4结尾，很大概率是视频链接，把这个链接放到浏览器访问一下，发现居然播放了，所以，只要有了播放链接，那我们本地破解100%没问题，但是为什么还是提示   会员才能享受服务呢？</p>
+<p>搜一下这段文案</p>
+<p>在VRPlayerActivity和TwoDPlayerActivity中搜到了这段文案</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/image-20190906173849407.png" alt="image-20190906173849407"></p>
+<p>binggo！！！，查看一下它的判断逻辑是 localData.getRetCode!=0 所以呢？我们的破解逻辑就有了</p>
+<p>就是将getRectCode返回0不就行了</p>
+<p>这段代码就不写啦，相信聪明的你已经领悟了，我就不放出来了，以防和谐，我还要偷偷摸摸用呢</p>
+<p>最后，放一下实际效果吧</p>
+<p><img src="/2019/09/04/利用xposed逆向某4k视频软件付费服务（二）/Jietu20190906-174656.gif" alt></p>
+<p>低调。。。。</p>
+
       
     </div>
     
@@ -366,6 +464,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓逆向/" rel="tag"> <i class="fa fa-tag"></i> 安卓逆向</a>
+          
+        </div>
       
 
       
@@ -436,8 +540,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -488,6 +601,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Xposed的开发"><span class="nav-number">1.</span> <span class="nav-text">Xposed的开发</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#开发环境"><span class="nav-number">1.1.</span> <span class="nav-text">开发环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#引入jar包"><span class="nav-number">1.2.</span> <span class="nav-text">引入jar包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#成为xposed模块"><span class="nav-number">1.2.1.</span> <span class="nav-text">成为xposed模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#进入其他应用的进程"><span class="nav-number">1.2.2.</span> <span class="nav-text">进入其他应用的进程</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#解决腾讯加固导致的classNotFound问题"><span class="nav-number">2.</span> <span class="nav-text">解决腾讯加固导致的classNotFound问题</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#破解VIP"><span class="nav-number">3.</span> <span class="nav-text">破解VIP</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#抓包破解vip"><span class="nav-number">4.</span> <span class="nav-text">抓包破解vip</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
