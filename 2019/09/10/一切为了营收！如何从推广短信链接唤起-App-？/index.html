@@ -79,13 +79,13 @@
 
 
 
-<meta name="description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。 &amp;lt;!-more-&amp;gt; 二、方案讨论对需求进行分析，归纳起来实际上就是一个问题，如何从短信唤起App？ 这里有两种方案。 第一种，也是最">
+<meta name="description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。">
 <meta name="keywords" content="安卓日常开发">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一切为了营收！如何从推广短信链接唤起 App ？">
 <meta property="og:url" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/index.html">
 <meta property="og:site_name" content="安卓小屋">
-<meta property="og:description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。 &amp;lt;!-more-&amp;gt; 二、方案讨论对需求进行分析，归纳起来实际上就是一个问题，如何从短信唤起App？ 这里有两种方案。 第一种，也是最">
+<meta property="og:description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910161646224.png">
 <meta property="og:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910161909055.png">
@@ -93,10 +93,10 @@
 <meta property="og:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162130735.png">
 <meta property="og:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162258717.png">
 <meta property="og:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162451352.png">
-<meta property="og:updated_time" content="2019-09-11T05:41:26.214Z">
+<meta property="og:updated_time" content="2019-09-11T05:43:03.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一切为了营收！如何从推广短信链接唤起 App ？">
-<meta name="twitter:description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。 &amp;lt;!-more-&amp;gt; 二、方案讨论对需求进行分析，归纳起来实际上就是一个问题，如何从短信唤起App？ 这里有两种方案。 第一种，也是最">
+<meta name="twitter:description" content="一、需求描述写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的推广短信，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。">
 <meta name="twitter:image" content="http://nbwzlyd.github.io/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910161646224.png">
 
 
@@ -364,7 +364,8 @@
 
       
         <h3 id="一、需求描述"><a href="#一、需求描述" class="headerlink" title="一、需求描述"></a>一、需求描述</h3><p>写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的<strong>推广短信</strong>，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。</p>
-<p>&lt;!-more-&gt;</p>
+<a id="more"></a>
+
 <h3 id="二、方案讨论"><a href="#二、方案讨论" class="headerlink" title="二、方案讨论"></a>二、方案讨论</h3><p>对需求进行分析，归纳起来实际上就是一个问题，如何从短信唤起App？</p>
 <p>这里有两种方案。</p>
 <p>第一种，也是最理想的直接从短信唤起，也就是点击短信中的链接后如果安装了 App 就跳转到 App，如果没有安装就在浏览器打开对应页面，如下图：</p>

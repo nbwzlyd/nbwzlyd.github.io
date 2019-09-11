@@ -350,108 +350,14 @@
 
       
         
-          
-            <h3 id="一、需求描述"><a href="#一、需求描述" class="headerlink" title="一、需求描述"></a>一、需求描述</h3><p>写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的<strong>推广短信</strong>，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。</p>
-<p>&lt;!-more-&gt;</p>
-<h3 id="二、方案讨论"><a href="#二、方案讨论" class="headerlink" title="二、方案讨论"></a>二、方案讨论</h3><p>对需求进行分析，归纳起来实际上就是一个问题，如何从短信唤起App？</p>
-<p>这里有两种方案。</p>
-<p>第一种，也是最理想的直接从短信唤起，也就是点击短信中的链接后如果安装了 App 就跳转到 App，如果没有安装就在浏览器打开对应页面，如下图：</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910161646224.png" alt="image-20190910161646224"></p>
-<p>第二种，经浏览器中转唤起，也就是点击短信链接后先用浏览器打开对应页面，在页面中进行“判断”（实际上不是真正的判断，而是发一个<code>scheme</code>给系统）如果安装了 App 就跳转到 App，否则就停留在当前页。</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910161909055.png" alt="image-20190910161909055"></p>
-<p>下面将对这两种方案分别进行分析、实施。</p>
-<h3 id="三、从短信直接唤起-App"><a href="#三、从短信直接唤起-App" class="headerlink" title="三、从短信直接唤起 App"></a>三、从短信直接唤起 App</h3><p>通常，App 监听私有短域名<code>strange.com</code>（不要问我为什么是短域名，因为短信就是按字算钱的，能省一分是一分）地址：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.VIEW"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.BROWSABLE"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:host</span>=<span class="string">"strange.com"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pathPattern</span>=<span class="string">".*"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:scheme</span>=<span class="string">"https"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:host</span>=<span class="string">"strange.com"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:pathPattern</span>=<span class="string">".*"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:scheme</span>=<span class="string">"http"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<h5 id="3-1、Android-系统"><a href="#3-1、Android-系统" class="headerlink" title="3.1、Android 系统"></a>3.1、Android 系统</h5><p>当点击短信中的链接后，系统会自行判断，如果安装了 App 就会出一个弹框让用户选择在 App 中打开还是在浏览器中打开，如图。</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162030588.png" alt="image-20190910162030588"></p>
-<p>选择弹框</p>
-<p>对用户来说要多做一次选择，这绝对不是好的体验。</p>
-<p>为了解决这个问题，Android 6.0 开始支持 <a href="https://developer.android.com/training/app-links/index.html" target="_blank" rel="noopener">Deep Links</a>，让用户点击链接直达 App。</p>
-<p>首先，在 intent-filter 中添加 <code>android:autoVerify=&quot;true&quot;</code>。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">intent-filter</span> <span class="attr">android:autoVerify</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.VIEW"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.BROWSABLE"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:host</span>=<span class="string">"strange.com"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:scheme</span>=<span class="string">"https"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>其次，在私有域下上传一个 json 文件：<br><code>https://strange.com/.well-known/assetlinks.json</code></p>
-<p>文件内容：</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="attr">"relation"</span>: [<span class="string">"delegate_permission/common.handle_all_urls"</span>],</span><br><span class="line">        <span class="attr">"target"</span>: &#123;</span><br><span class="line">            <span class="attr">"namespace"</span>: <span class="string">"android_app"</span>,</span><br><span class="line">            <span class="attr">"package_name"</span>: <span class="string">"应用ID"</span>,</span><br><span class="line">            <span class="attr">"sha256_cert_fingerprints"</span>:[<span class="string">"签名证书指纹"</span>]</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
-<p>系统在安装应用后会自动访问 json 文件进行检验，如果检验通过，用户访问 <code>strange.com</code> 域名下的链接会直接跳转到应用。</p>
-<h5 id="3-2、iOS-系统"><a href="#3-2、iOS-系统" class="headerlink" title="3.2、iOS 系统"></a>3.2、iOS 系统</h5><p>必须采用 <a href="https://developer.apple.com/library/content/documentation/General/Conceptual/AppSearch/UniversalLinks.html#//apple_ref/doc/uid/TP40016308-CH12-SW2" target="_blank" rel="noopener">Universal Links</a>，否则点击还是直接跳转到浏览器。</p>
-<h5 id="从短信直接唤起-App-总结："><a href="#从短信直接唤起-App-总结：" class="headerlink" title="从短信直接唤起 App 总结："></a>从短信直接唤起 App 总结：</h5><p>要实现短信直接唤起 App，Android 可以用 <code>intent-filter</code> 对域名进行监听，但是会出弹框让用户进行选择，为了更好的体验，建议采用 Deep Links 技术方案，只支持 6.0 以上系统；iOS 只能采用 Universal Links 技术方案，只支持 9.0 以上系统。</p>
-<table>
-<thead>
-<tr>
-<th>系统</th>
-<th>首选方案</th>
-<th>备选方案</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Android</td>
-<td>Deep Links（Android 6.0+）</td>
-<td>intent-filter</td>
-</tr>
-<tr>
-<td>iOS</td>
-<td>Universal Links（iOS 9.0+）</td>
-<td>无，只能跳浏览器</td>
-</tr>
-</tbody></table>
-<h3 id="四、经浏览器中转唤起-App"><a href="#四、经浏览器中转唤起-App" class="headerlink" title="四、经浏览器中转唤起 App"></a>四、经浏览器中转唤起 App</h3><p>上表所示，如果只能用备选方案，那么用户就有可能会首先跳转到浏览器（对应的是下载页面），经过浏览器中转，唤起 App。</p>
-<p>通常的做法是，App 中监听 scheme <code>strange</code>：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">intent-filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.DEFAULT"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">category</span> <span class="attr">android:name</span>=<span class="string">"android.intent.category.BROWSABLE"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">action</span> <span class="attr">android:name</span>=<span class="string">"android.intent.action.VIEW"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span> <span class="attr">android:scheme</span>=<span class="string">"strange"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">intent-filter</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>H5 页面中内嵌：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"strange://login"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>或者</strong>执行脚本：</p>
-<figure class="highlight jsx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.location.href=<span class="string">"strange://login"</span></span><br></pre></td></tr></table></figure>
-
-<p>因为浏览器只会处理<code>http</code>、<code>https</code>协议，当浏览器打开我们的 H5 下载页面遇到不能处理的私有协议 <code>strange</code>，就会发 <code>intent</code> 给系统，如果有 App 可以处理这个协议会出弹框询问用户是否用该 App 打开，否则什么都不做，具体效果：</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162130735.png" alt="image-20190910162130735"></p>
-<p>虽然弹框体验欠缺，不过也是目前比较好的方案了。</p>
-<h5 id="兼容性问题"><a href="#兼容性问题" class="headerlink" title="兼容性问题"></a>兼容性问题</h5><p>可是，重点来了，我们在实际测试过程中发现了一堆兼容性问题，在说明这些兼容性问题前，我们先解释一个概念：<strong>intent:// 协议。</strong></p>
-<p>Android Chrome 25+ 后已经不支持自定义 <code>scheme</code> 的方式，只支持 <code>intent://</code> 协议（<a href="https://developer.chrome.com/multidevice/android/intents" target="_blank" rel="noopener">Android Intents with Chrome</a>），最终要的是需要用户手动进行 <strong>点击</strong> 才能跳转，举个例子：</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;S.browser_fallback_url=http%3A%2F%2Fzxing.org;end"</span>&gt;</span> Take a QR code <span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">href</span>=<span class="string">"intent://xxx"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span>&gt;<span class="tag">&lt;/<span class="name">iframe</span>&gt;</span>// 失效</span><br><span class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">href</span>=<span class="string">"strange://xxx"</span> <span class="attr">style</span>=<span class="string">"display: none;"</span>&gt;</span>&gt;<span class="tag">&lt;/<span class="name">iframe</span>&gt;</span>// 失效</span><br></pre></td></tr></table></figure>
-
-<p><code>intent://</code> 协议格式说明：</p>
-<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="symbol">intent:</span></span><br><span class="line">   /<span class="regexp">/scan/</span></span><br><span class="line">   <span class="comment">#Intent; </span></span><br><span class="line">      package=com.google.zxing.client.android; </span><br><span class="line">      scheme=zxing; </span><br><span class="line">   <span class="keyword">end</span>;</span><br></pre></td></tr></table></figure>
-
-<p>目前市面上大多第三方浏览器都是基于 Chrome 开发，这就带来了兼容性问题（没有条件覆盖所有的系统浏览器，这里只是有限测试的结果）：</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162258717.png" alt="image-20190910162258717"></p>
-<p>1、部分浏览器，只支持 <code>intent://</code><strong>手动</strong></p>
-<p>2、部分浏览器只支持 <code>scheme</code> 唤起，如 UC 浏览器。</p>
-<p>3、大部分浏览器，同时支持 <code>scheme</code> 私有协议和<code>intent://</code> 协议 <strong>自动</strong> 唤起。但，都没有按标准的 <code>intent://</code> 协议来实现（除了 360 浏览器，给 360 点个赞）：</p>
-<ul>
-<li>有的浏览器在 App 没安装时并没有执行<code>S.browser_fallback_url</code>，而是跳转到应用市场如猎豹浏览器 4.46.3、乐视浏览器 1.2.1.29。</li>
-<li>有的浏览器不支持<code>S.browser_fallback_url</code>如搜狗浏览器、欧朋浏览器、猎豹浏览器。</li>
-<li>有的浏览器无论应用有无安装<code>S.browser_fallback_url</code>一直都会执行如 QQ 浏览器。</li>
-</ul>
-<p>所以对这部分浏览器，不能使用 <code>intent://</code> 协议。</p>
-<p>4、更奇葩者，二者都不支持，如百度浏览器。</p>
-<h5 id="兼容性问题解决方案"><a href="#兼容性问题解决方案" class="headerlink" title="兼容性问题解决方案"></a>兼容性问题解决方案</h5><p>针对上述三个兼容性问题，第 4 种情况无解我们直接忽略，第 2 第 3 种情况只能用自定义 scheme 的方式。</p>
-<p>问题出在第 1 种情况，因为只能手动唤起，我们需要对浏览器类型进行判断（浏览器没有提供是否支持<code>自定义 scheme</code>、<code>intent://</code>的 API 只能通过 UA 判断），结合我们有限的测试结果，如果是锤子、Chrome 原生浏览器，需在页面中内置一个“下载应用”的按钮引导用户点击。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 如果安装了 App 就跳转 strange://login，否则就访问 S.browser_fallback_url 的值 http://strange.com</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"intent://login#Intent;scheme=strange;package=com.strange;S.browser_fallback_url=http%3A%2F%2Fstrange.com;end"</span>&gt;</span>跳转到活动页/下载<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>我们来分析一下浏览器的 UA ，举几个例子：</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//小米系统浏览器</span></span><br><span class="line">User-Agent:Mozilla/<span class="number">5.0</span> (Linux; U; Android <span class="number">6.0</span><span class="number">.1</span>; zh-cn; MI <span class="number">3</span>W Build/MMB29M) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Version/<span class="number">4.0</span> Chrome/<span class="number">53.0</span><span class="number">.2785</span><span class="number">.146</span> Mobile Safari/<span class="number">537.36</span> XiaoMi/MiuiBrowser/<span class="number">8.9</span><span class="number">.5</span></span><br><span class="line"><span class="comment">// 小米 Chrome 原生浏览器</span></span><br><span class="line">User-Agent:Mozilla/<span class="number">5.0</span> (Linux; Android <span class="number">6.0</span><span class="number">.1</span>; MI <span class="number">3</span>W Build/MMB29M) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">57.0</span><span class="number">.2987</span><span class="number">.108</span> Mobile Safari/<span class="number">537.36</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 锤子系统浏览器</span></span><br><span class="line">User-Agent:Mozilla/<span class="number">5.0</span> (Linux; Android <span class="number">5.1</span><span class="number">.1</span>; YQ603 Build/LMY47V) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">46.0</span><span class="number">.2490</span><span class="number">.11</span> Mobile Safari/<span class="number">537.36</span></span><br><span class="line"><span class="comment">// 锤子 Chrome 原生浏览器</span></span><br><span class="line">User-Agent:Mozilla/<span class="number">5.0</span> (Linux; Android <span class="number">5.1</span><span class="number">.1</span>; YQ603 Build/LMY47V) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">50.0</span><span class="number">.2661</span><span class="number">.89</span> Mobile Safari/<span class="number">537.36</span></span><br></pre></td></tr></table></figure>
-
-<p>可以看出小米浏览器是在 Chrome 原生浏览器的 UA 上增加了 <code>XiaoMi/MiuiBrowser/8.9.5</code> 这部分特征码。类似的，很多第三方浏览器都是在 Chrome 基础上增加自己的特征码，换句话说 Chrome 原生浏览器 UA 没有自己的特征。</p>
-<p>而锤子系统浏览器和 Chrome 原生浏览器 UA 几乎一样，这就使得<code>判断是否锤子系统浏览器、 Chrome 原生浏览器</code> 变得异常困难，要想尽可能完美解决问题只能使用排除法。</p>
-<p>排除法由于不可能排除所有非 Chrome 原生浏览器，可能会存在误伤的可能。</p>
-<h5 id="经浏览器中转唤起-App-总结："><a href="#经浏览器中转唤起-App-总结：" class="headerlink" title="经浏览器中转唤起 App 总结："></a>经浏览器中转唤起 App 总结：</h5><p>要实现经浏览器中转 <strong>自动</strong> 唤起 App，Android 和 iOS 都可以通过 <code>自定义 scheme</code> 的方式，但 Android 的情况稍显复杂，因为部分浏览器并不支持，必须换成 <code>intent://</code> 协议的方式 <strong>手动</strong> 唤起。</p>
-<p>考虑到浏览器判断的难度，结合浏览器市场占有率的情况，我们最终的方案是暂时忽略 <code>锤子系统浏览器、 Chrome 原生浏览器</code> 这部分不支持 <code>自定义 scheme 自动唤起 �App</code> 的用户。</p>
-<h3 id="五、从短信唤起-App-最终方案"><a href="#五、从短信唤起-App-最终方案" class="headerlink" title="五、从短信唤起 App 最终方案"></a>五、从短信唤起 App 最终方案</h3><p>综合起来就是：</p>
-<ul>
-<li>通过 Deep Links（iOS 则是Universal Links），可以实现点击短信链接直接唤起 App；</li>
-<li>如果系统因为各种原因不支持 Deep Links，备选方案是 <code>intent filter</code>，不过会出弹框让用户选择用哪个 App 打开链接；</li>
-<li>如果用户没有选择我们的 App 而是选择了浏览器打开，则通过 <code>自定义 scheme</code> 尝试唤起 App；</li>
-<li>由于技术和成本问题，我们忽略不支持 <code>自定义 scheme</code> 的浏览器。</li>
-</ul>
-<p>如下图所示：</p>
-<p><img src="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/image-20190910162451352.png" alt="image-20190910162451352"></p>
-
-          
+          <h3 id="一、需求描述"><a href="#一、需求描述" class="headerlink" title="一、需求描述"></a>一、需求描述</h3><p>写这篇文章，也是缘于运营的一个需求：在 App 运营过程中，会有大量的<strong>推广短信</strong>，里面附有链接，目的是引导用户参与活动。如果用户手机没有安装我们的 App 就引导其去下载页，如果用户已经安装了我们的 App 就直接在 App 中打开对应的活动。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
