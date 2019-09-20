@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="安卓开发,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="转载 ：作者：移不动丶 链接： https://juejin.im/post/5d75e8cd6fb9a06afd662bf3 本文由作者授权发布。 个人始终觉得《阿里巴巴Android开发手册》是一本好手册，上面确实提供了很多Android开发的开发者注意不到的地方，个人也从中获益匪浅，这片文章也只是针对其中的一点谈了一些自己不一样的理解">
+<meta name="keywords" content="安卓开发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法">
+<meta property="og:url" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/index.html">
+<meta property="og:site_name" content="安卓小屋">
+<meta property="og:description" content="转载 ：作者：移不动丶 链接： https://juejin.im/post/5d75e8cd6fb9a06afd662bf3 本文由作者授权发布。 个人始终觉得《阿里巴巴Android开发手册》是一本好手册，上面确实提供了很多Android开发的开发者注意不到的地方，个人也从中获益匪浅，这片文章也只是针对其中的一点谈了一些自己不一样的理解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/640.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/sc%E5%B5%8C%E5%A5%97rv.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101353276.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/nes_rv.gif">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101704174.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101816035.png">
+<meta property="og:updated_time" content="2019-09-20T02:21:36.539Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法">
+<meta name="twitter:description" content="转载 ：作者：移不动丶 链接： https://juejin.im/post/5d75e8cd6fb9a06afd662bf3 本文由作者授权发布。 个人始终觉得《阿里巴巴Android开发手册》是一本好手册，上面确实提供了很多Android开发的开发者注意不到的地方，个人也从中获益匪浅，这片文章也只是针对其中的一点谈了一些自己不一样的理解">
+<meta name="twitter:image" content="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/640.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/">
+
+
+
+
+
+  <title>反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法 | 安卓小屋</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">安卓小屋</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录开发点点滴滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://nbwzlyd.github.io/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="nbwzlyd">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安卓小屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-20T10:04:15+08:00">
+                2019-09-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  4.3k字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  18分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>转载 ：作者：<strong>移不动丶</strong></p>
+<p>链接：</p>
+<p><a href="https://juejin.im/post/5d75e8cd6fb9a06afd662bf3" target="_blank" rel="noopener">https://juejin.im/post/5d75e8cd6fb9a06afd662bf3</a></p>
+<p>本文由作者授权发布。</p>
+<p><strong>个人始终觉得《阿里巴巴Android开发手册》是一本好手册，上面确实提供了很多Android开发的开发者注意不到的地方，个人也从中获益匪浅，这片文章也只是针对其中的一点谈了一些自己不一样的理解</strong></p>
+<a id="more"></a>
+
+
+
+<p>#问题背景</p>
+<p>在开发中我们经常会遇到需要ScrollView嵌套RecyclerView的情况，例如美团商家首页这样式的：</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/640.gif" alt></p>
+<p>忽略其细节的交互，美团外卖商家首页大致可以抽象成两部分：</p>
+<ul>
+<li>顶部的商家介绍（我们姑且称之为Header）</li>
+<li>底部的商品列表（我们姑且称之为Content）</li>
+</ul>
+<p>如果对Android开发规范不太了解，布局大概会这样实现：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">ScrollView</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:padding</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@color/colorAccent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"我是商家介绍，我们家的饭贼好吃，优惠还贼多，买到就是赚到"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"#fff"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"20dp"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">android.support.v7.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/recyclerView"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@color/design_default_color_primary"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">ScrollView</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>#<em>2</em>问题出现</p>
+<p>上面的布局看起来好像没什么毛病，我们运行一下看看效果：</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/sc%E5%B5%8C%E5%A5%97rv.gif" alt></p>
+<p><strong>看到上图我相信大部分的内心是崩溃的：为什么Header不会跟随着Content一起滑动呢？说好的滚动视图ScrollView，为什么你就不“滚”了呢？</strong></p>
+<h3 id="Header为什么不能滚动了"><a href="#Header为什么不能滚动了" class="headerlink" title="Header为什么不能滚动了"></a><strong>Header为什么不能滚动了</strong></h3><p>很简单，我们先来看看官方对于ScrollView是怎么定义的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A view group that allows the view hierarchy placed within it to be scrolled.</span></span><br><span class="line"><span class="comment"> * 一个允许内部视图层次滚动的视图组。</span></span><br><span class="line"><span class="comment"> * Scroll view may have only one direct child placed within it.</span></span><br><span class="line"><span class="comment"> * ScrollView 仅可包含一个直接子View</span></span><br><span class="line"><span class="comment"> * ...此处省略不相关的注释...</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>从注释我们能明显看出来，官方对于ScrollView最言简意赅的定位就是可以使其内部布局滚动的布局。</p>
+<p>我们再接着看一下RecyclerView的定位：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * A flexible view for providing a limited window into a large data set.</span></span><br><span class="line"><span class="comment"> * 一种灵活的视图，用于在有限的窗口展示大量的数据。</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+<p>在有限的窗口展示大量的数据，说白了，就是以滚动的方式，使用有限的空间展示大量的数据(这里的“有限”很重要，我们下面会用到）。</p>
+<p>那么问题就来了：两个视图都能滚动，当我们的手指在屏幕上滑动的时候，Android系统并不知道我们想要哪个视图滚动起来，这就是我们常说的滑动冲突。</p>
+<p>除此之外，ScrollView嵌套ListView时，会疯狂调用Adapter中的getView()方法，将ListView所有的item加载到内存中，消耗大量的内存和cpu资源，引起界面卡顿。</p>
+<p>这也就是为什么《阿里巴巴Android开发手册》中禁止ScrollView嵌套ListView/GridView/ExpandableListView。</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101353276.png" alt="image-20190920101353276"></p>
+<p><strong>滑动冲突的解决</strong></p>
+<p>现在解决滑动冲突的方案主要有两个，其一：基于传统的事件分发机制；其二：使用NestedScrollingChild &amp; NestedScrollingParent。</p>
+<p>第一种方案网上相关教程有很多，这里就不再赘述。关于NestedScrollingChild与NestedScrollingParent的用法推荐学习鸿洋大大的博客：</p>
+<p>Android NestedScrolling机制完全解析 带你玩转嵌套滑动</p>
+<p><em><a href="https://blog.csdn.net/lmj623565791/article/details/52204039" target="_blank" rel="noopener">https://blog.csdn.net/lmj623565791/article/details/52204039</a></em></p>
+<p>由于传统事件分发机制的缺陷（父布局拦截消费滑动事件后无法继续传递给子View），所以我们这里更推荐第二种方式解决滑动冲突。</p>
+<p>当然，如果只是为了解决这里遇到的问题，我们大可不必从头研究NestedScrollingParent与NestedScrollingChild的用法，因为Android内置的许多控件已经实现了这两个接口，这其中就包括了我们接下来要提到的NestedScrollView.作为日常开发中的高频控件，RecyclerView当然也实现了这一机制。</p>
+<p>#<em>3</em>换上NestedScrollView试试？</p>
+<p>对于NestedScrollView，官方的定义是这样的：</p>
+<ul>
+<li><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * NestedScrollView is just like &#123;<span class="doctag">@link</span> android.widget.ScrollView&#125;, </span></span><br><span class="line"><span class="comment"> * NestedScrollView与ScrollView类似</span></span><br><span class="line"><span class="comment"> * but it supports acting as both a nested scrolling parent and child on both new and old versions of Android.</span></span><br><span class="line"><span class="comment"> * 但它支持在Android的新旧版本上同时充当嵌套滚动的父视图和子视图。</span></span><br><span class="line"><span class="comment"> * Nested scrolling is enabled by default.</span></span><br><span class="line"><span class="comment"> * 默认情况下启用嵌套滚动。</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+</li>
+</ul>
+<p>看起来NestedScrollView似乎能够完美解决我们遇到的困扰，那我们不妨把上面的根布局换成NestedScrollView试一下:</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">android.support.v4.widget.NestedScrollView</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span> <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span>                   </span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">"vertical"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:padding</span>=<span class="string">"15dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"200dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@color/colorAccent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"我是商家介绍，我们家的饭贼好吃，优惠还贼多，买到就是赚到"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"#fff"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textSize</span>=<span class="string">"20dp"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">android.support.v7.widget.RecyclerView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/recyclerView"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@color/design_default_color_primary"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">android.support.v4.widget.NestedScrollView</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>运行起来看下效果：</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/nes_rv.gif" alt></p>
+<p>换成NestedScrollView后，交互看起来符合我们的预期了</p>
+<p>鼓掌👏撒花🎉，看起来我们成功解决了问题。真的是这样么？</p>
+<p>#<em>4</em>新问题出现了</p>
+<p>我们都知道，RecyclerView 是需要结合 Adapter来使用的，Adapter中有几个关键方法：</p>
+<ul>
+<li>onViewAttachedToWindow</li>
+<li>onCreateViewHolder</li>
+<li>onBindViewHolder …</li>
+</ul>
+<p>其中，关于onViewAttachedToWindow方法的调用，源码中是这么说明的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Called when a view created by this adapter has been attached to a window.</span></span><br><span class="line"><span class="comment">  * 当Adapter通过onCreateViewHolder方法创建的视图被附加到窗口时调用。</span></span><br><span class="line"><span class="comment">  */</span></span><br></pre></td></tr></table></figure>
+
+<p>也就是说，当RecyclerView中的视图滚动到屏幕我们可以看到的时候，就会调用该方法。我们复写该方法，打印出Log，看下NestedScrollView嵌套下的RecyclerView的onViewAttachedToWindow()方法的调用情况：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">override fun <span class="title">onViewAttachedToWindow</span><span class="params">(holder: ViewHolder)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewAttachedToWindow(holder)</span><br><span class="line">        Log.e(TAG, <span class="string">"onViewAttachedToWindow:"</span> +holder.tvPosition.text.toString())</span><br><span class="line">    &#125;</span><br><span class="line"><span class="function">override fun <span class="title">getItemCount</span><span class="params">()</span>: Int </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">50</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用情况如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2019</span>-<span class="number">09</span>-<span class="number">06</span> <span class="number">17</span>:<span class="number">59</span>:<span class="number">02.161</span> <span class="number">24351</span>-<span class="number">24351</span>/com.vision.advancedui E/MyAdapter: onViewAttachedToWindow:Position：<span class="number">0</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">09</span>-<span class="number">06</span> <span class="number">17</span>:<span class="number">59</span>:<span class="number">02.165</span> <span class="number">24351</span>-<span class="number">24351</span>/com.vision.advancedui E/MyAdapter: onViewAttachedToWindow:Position：<span class="number">1</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">09</span>-<span class="number">06</span> <span class="number">17</span>:<span class="number">59</span>:<span class="number">02.168</span> <span class="number">24351</span>-<span class="number">24351</span>/com.vision.advancedui E/MyAdapter: onViewAttachedToWindow:Position：<span class="number">2</span></span><br><span class="line"><span class="number">2019</span>-<span class="number">09</span>-<span class="number">06</span> <span class="number">17</span>:<span class="number">59</span>:<span class="number">02.171</span> <span class="number">24351</span>-<span class="number">24351</span>/com.vision.advancedui E/MyAdapter: onViewAttachedToWindow:Position：<span class="number">3</span></span><br><span class="line">......</span><br><span class="line">此处省略<span class="number">45</span>条相似log</span><br><span class="line">......</span><br><span class="line"><span class="number">2019</span>-<span class="number">09</span>-<span class="number">06</span> <span class="number">17</span>:<span class="number">59</span>:<span class="number">02.304</span> <span class="number">24351</span>-<span class="number">24351</span>/com.vision.advancedui E/MyAdapter: onViewAttachedToWindow:Position：<span class="number">49</span></span><br></pre></td></tr></table></figure>
+
+<p>通过日志，我们可以清晰的看到，RecyclerView 几乎一瞬间加载完了所有的（这里为50个）item，和Google官方描述的“按需加载”完全不同，是Google注释描述的不对么？</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101704174.png" alt="image-20190920101704174"></p>
+<p>包括《阿里巴巴Android开发规范》里，也有这样的用法示例，并标注为了“正确“用法。究竟是哪里出了问题呢？</p>
+<p>#5找到问题的根本</p>
+<p>我们上文提到了，Google对于RecyclerView的定位是：在有限的窗口展示大量的数据，我们很容易想到，会不会是RecyclerView的高度测量出错了？</p>
+<h3 id="View的绘制流程"><a href="#View的绘制流程" class="headerlink" title="View的绘制流程"></a><strong>View的绘制流程</strong></h3><p>相信大部分人都知道Android大体的绘制流程（把大象装冰箱，总共分几步？）：</p>
+<ol>
+<li>measure</li>
+<li>layout</li>
+<li>draw</li>
+</ol>
+<p>映射到我们平常自定义View中的方法就是onMeasure、onLayout、onDraw三个方法，对于继承自ViewGroup的视图，除了要确定自身的大小外，还要帮助子View测量，确定他们的大小，对此，ViewGroup提供了一个静态方法getChildMeasureSpec:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">getChildMeasureSpec</span><span class="params">(<span class="keyword">int</span> spec, <span class="keyword">int</span> padding, <span class="keyword">int</span> childDimension)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> specMode = MeasureSpec.getMode(spec);</span><br><span class="line">        <span class="keyword">int</span> specSize = MeasureSpec.getSize(spec);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> size = Math.max(<span class="number">0</span>, specSize - padding);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> resultSize = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> resultMode = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">switch</span> (specMode) &#123;</span><br><span class="line">        <span class="comment">// Parent has imposed an exact size on us</span></span><br><span class="line">        <span class="keyword">case</span> MeasureSpec.EXACTLY:</span><br><span class="line">            <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                resultSize = childDimension;</span><br><span class="line">                resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to be our size. So be it.</span></span><br><span class="line">                resultSize = size;</span><br><span class="line">                resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to determine its own size. It can't be</span></span><br><span class="line">                <span class="comment">// bigger than us.</span></span><br><span class="line">                resultSize = size;</span><br><span class="line">                resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Parent has imposed a maximum size on us</span></span><br><span class="line">        <span class="keyword">case</span> MeasureSpec.AT_MOST:</span><br><span class="line">            <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// Child wants a specific size... so be it</span></span><br><span class="line">                resultSize = childDimension;</span><br><span class="line">                resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to be our size, but our size is not fixed.</span></span><br><span class="line">                <span class="comment">// Constrain child to not be bigger than us.</span></span><br><span class="line">                resultSize = size;</span><br><span class="line">                resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to determine its own size. It can't be</span></span><br><span class="line">                <span class="comment">// bigger than us.</span></span><br><span class="line">                resultSize = size;</span><br><span class="line">                resultMode = MeasureSpec.AT_MOST;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Parent asked to see how big we want to be</span></span><br><span class="line">        <span class="keyword">case</span> MeasureSpec.UNSPECIFIED:</span><br><span class="line">            <span class="keyword">if</span> (childDimension &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">                <span class="comment">// Child wants a specific size... let him have it</span></span><br><span class="line">                resultSize = childDimension;</span><br><span class="line">                resultMode = MeasureSpec.EXACTLY;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.MATCH_PARENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to be our size... find out how big it should</span></span><br><span class="line">                <span class="comment">// be</span></span><br><span class="line">                resultSize = View.sUseZeroUnspecifiedMeasureSpec ? <span class="number">0</span> : size;</span><br><span class="line">                resultMode = MeasureSpec.UNSPECIFIED;</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (childDimension == LayoutParams.WRAP_CONTENT) &#123;</span><br><span class="line">                <span class="comment">// Child wants to determine its own size.... find out how</span></span><br><span class="line">                <span class="comment">// big it should be</span></span><br><span class="line">                resultSize = View.sUseZeroUnspecifiedMeasureSpec ? <span class="number">0</span> : size;</span><br><span class="line">                resultMode = MeasureSpec.UNSPECIFIED;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//noinspection ResourceType</span></span><br><span class="line">        <span class="keyword">return</span> MeasureSpec.makeMeasureSpec(resultSize, resultMode);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>该方法返回一个MeasureSpec，关于MeasureSpce，翻译成中文即为测量规格，它是一个32位的int类型，高2位代表测量模式，低30位代表测量大小。网上关于它的介绍有很多，这里就不展开讲了。我们这里只要知道，测量模式有3种：</p>
+<ul>
+<li>UNSPECIFIED  未指明模式父布局不限制子布局的大小，对其不做任何限制。</li>
+<li>EXACTLY  精确模式父布局可以确定子布局的最终大小。</li>
+<li>AT_MOST  至多模式父布局确定不了子布局的最终大小，但是子布局的大小不能超过父布局给出的大小。</li>
+</ul>
+<p>总结成表格就是这样的（借用任玉刚大佬的图）：</p>
+<p><img src="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/image-20190920101816035.png" alt="image-20190920101816035"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthMeasureSpec, <span class="keyword">int</span> heightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),</span><br><span class="line">                getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以认为，调用setMeasuredDimension方法就标志着子View完成了测量，其高度和宽度也就随之确定了下来。通过不断的递归循环这个流程就能完成最终的测量。</p>
+<h3 id="RecyclerView的测量出现问题了么？"><a href="#RecyclerView的测量出现问题了么？" class="headerlink" title="RecyclerView的测量出现问题了么？"></a><strong>RecyclerView的测量出现问题了么？</strong></h3><p>回到我们这个问题，通过以上View测量流程的回顾，我们可以确定：</p>
+<p><strong>RecyclerView的高度是由NestedScrollView中传递给RecyclerView中的MeasureSpec参数和RecyclerView中的onMeasure两处决定的</strong>我们先来看看NestedScrollView中传递给RecyclerView中的MeasureSpec参数，在NestedScrollView的measureChild方法中是这么写的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">measureChild</span><span class="params">(View child, <span class="keyword">int</span> parentWidthMeasureSpec,</span></span></span><br><span class="line"><span class="function"><span class="params">            <span class="keyword">int</span> parentHeightMeasureSpec)</span> </span>&#123;</span><br><span class="line">        ViewGroup.LayoutParams lp = child.getLayoutParams();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> childWidthMeasureSpec;</span><br><span class="line">        <span class="keyword">int</span> childHeightMeasureSpec;</span><br><span class="line"></span><br><span class="line">        childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec, getPaddingLeft()</span><br><span class="line">                + getPaddingRight(), lp.width);</span><br><span class="line"></span><br><span class="line">        childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(<span class="number">0</span>, MeasureSpec.UNSPECIFIED);</span><br><span class="line"></span><br><span class="line">        child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们可以看到，传递给RecyclerView关于高度的测量模式是UNSPECIFIED。接下来看看RecyclerView中的onMeasure()：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">onMeasure</span><span class="params">(<span class="keyword">int</span> widthSpec, <span class="keyword">int</span> heightSpec)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (mLayout == <span class="keyword">null</span>) &#123;</span><br><span class="line">            defaultOnMeasure(widthSpec, heightSpec);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (mLayout.mAutoMeasure) &#123;</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> widthMode = MeasureSpec.getMode(widthSpec);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">int</span> heightMode = MeasureSpec.getMode(heightSpec);</span><br><span class="line">            <span class="keyword">final</span> <span class="keyword">boolean</span> skipMeasure = widthMode == MeasureSpec.EXACTLY</span><br><span class="line">                    &amp;&amp; heightMode == MeasureSpec.EXACTLY;</span><br><span class="line">            mLayout.onMeasure(mRecycler, mState, widthSpec, heightSpec);</span><br><span class="line">            <span class="keyword">if</span> (skipMeasure || mAdapter == <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (mState.mLayoutStep == State.STEP_START) &#123;</span><br><span class="line">                dispatchLayoutStep1();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// set dimensions in 2nd step. Pre-layout should happen with old dimensions for</span></span><br><span class="line">            <span class="comment">// consistency</span></span><br><span class="line">            mLayout.setMeasureSpecs(widthSpec, heightSpec);</span><br><span class="line">            mState.mIsMeasuring = <span class="keyword">true</span>;</span><br><span class="line">            dispatchLayoutStep2();</span><br><span class="line">            <span class="comment">// now we can get the width and height from the children.</span></span><br><span class="line">            <span class="comment">// 这行代码是重点</span></span><br><span class="line">            mLayout.setMeasuredDimensionFromChildren(widthSpec, heightSpec);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// if RecyclerView has non-exact width and height and if there is at least one child</span></span><br><span class="line">            <span class="comment">// which also has non-exact width &amp; height, we have to re-measure.</span></span><br><span class="line">            <span class="keyword">if</span> (mLayout.shouldMeasureTwice()) &#123;</span><br><span class="line">                mLayout.setMeasureSpecs(</span><br><span class="line">                        MeasureSpec.makeMeasureSpec(getMeasuredWidth(), MeasureSpec.EXACTLY),</span><br><span class="line">                        MeasureSpec.makeMeasureSpec(getMeasuredHeight(), MeasureSpec.EXACTLY));</span><br><span class="line">                mState.mIsMeasuring = <span class="keyword">true</span>;</span><br><span class="line">                dispatchLayoutStep2();</span><br><span class="line">                <span class="comment">// now we can get the width and height from the children.</span></span><br><span class="line">                mLayout.setMeasuredDimensionFromChildren(widthSpec, heightSpec);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (mHasFixedSize) &#123;</span><br><span class="line">                mLayout.onMeasure(mRecycler, mState, widthSpec, heightSpec);</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// custom onMeasure</span></span><br><span class="line">            <span class="keyword">if</span> (mAdapterUpdateDuringMeasure) &#123;</span><br><span class="line">                eatRequestLayout();</span><br><span class="line">                onEnterLayoutOrScroll();</span><br><span class="line">                processAdapterUpdatesAndSetAnimationFlags();</span><br><span class="line">                onExitLayoutOrScroll();</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (mState.mRunPredictiveAnimations) &#123;</span><br><span class="line">                    mState.mInPreLayout = <span class="keyword">true</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// consume remaining updates to provide a consistent state with the layout pass.</span></span><br><span class="line">                    mAdapterHelper.consumeUpdatesInOnePass();</span><br><span class="line">                    mState.mInPreLayout = <span class="keyword">false</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                mAdapterUpdateDuringMeasure = <span class="keyword">false</span>;</span><br><span class="line">                resumeRequestLayout(<span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (mAdapter != <span class="keyword">null</span>) &#123;</span><br><span class="line">                mState.mItemCount = mAdapter.getItemCount();</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                mState.mItemCount = <span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            eatRequestLayout();</span><br><span class="line">            mLayout.onMeasure(mRecycler, mState, widthSpec, heightSpec);</span><br><span class="line">            resumeRequestLayout(<span class="keyword">false</span>);</span><br><span class="line">            mState.mInPreLayout = <span class="keyword">false</span>; <span class="comment">// clear</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这块代码的逻辑还是很清晰的，在mAutoMeasure属性为true时，除了RecyclerView没有精确的宽度和高度 + 至少有一个孩子也有不精确的宽度和高度的时候需要测量两次的时候，高度的测量模式为EXACTLY，其余都是调用mLayout.setMeasuredDimensionFromChildren(widthSpec, heightSpec)来确定RecyclerView的大小。</p>
+<p><strong>关于mAutoMeasure属性什么时候为true，源码里的注释是这么说的：</strong></p>
+<p>英语就不贴了，这里用大白话翻译一下，中心意思就是：**如果搭配RecyclerView的LayoutManager支持WRAP_CONTENT的属性时，这个值就应该为true。</p>
+<p>看到这里我相信你们又该有疑问了：</p>
+<p>都有哪些LayoutManager支持WRAP_CONTENT属性呢？源码注释是这么说的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* AutoMeasure works as follows:</span></span><br><span class="line"><span class="comment">* &lt;ol&gt;</span></span><br><span class="line"><span class="comment">* &lt;li&gt;LayoutManager should call &#123;<span class="doctag">@code</span> setAutoMeasureEnabled(true)&#125; to enable it. All of</span></span><br><span class="line"><span class="comment">* the framework LayoutManagers use &#123;<span class="doctag">@code</span> auto-measure&#125;.&lt;/li&gt;</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<p>意思就是<strong>所用Android提供的原生的LayoutManager的mAutoMeasure属性都为true。</strong></p>
+<p>我们再来看下setMeasuredDimensionFromChildren方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">setMeasuredDimensionFromChildren</span><span class="params">(<span class="keyword">int</span> widthSpec, <span class="keyword">int</span> heightSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> count = getChildCount();</span><br><span class="line">    <span class="keyword">if</span> (count == <span class="number">0</span>) &#123;</span><br><span class="line">        mRecyclerView.defaultOnMeasure(widthSpec, heightSpec);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">int</span> minX = Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">int</span> minY = Integer.MAX_VALUE;</span><br><span class="line">    <span class="keyword">int</span> maxX = Integer.MIN_VALUE;</span><br><span class="line">    <span class="keyword">int</span> maxY = Integer.MIN_VALUE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</span><br><span class="line">        View child = getChildAt(i);</span><br><span class="line">        <span class="keyword">final</span> Rect bounds = mRecyclerView.mTempRect;</span><br><span class="line">        getDecoratedBoundsWithMargins(child, bounds);</span><br><span class="line">        <span class="keyword">if</span> (bounds.left &lt; minX) &#123;</span><br><span class="line">            minX = bounds.left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (bounds.right &gt; maxX) &#123;</span><br><span class="line">            maxX = bounds.right;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (bounds.top &lt; minY) &#123;</span><br><span class="line">            minY = bounds.top;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (bounds.bottom &gt; maxY) &#123;</span><br><span class="line">            maxY = bounds.bottom;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 遍历RecyclerView的所有子View，将其left、top、right、bottom四个值赋值给mTempRect</span></span><br><span class="line">    mRecyclerView.mTempRect.set(minX, minY, maxX, maxY);</span><br><span class="line">    <span class="comment">// 真正确定RecyclerView高度的代码</span></span><br><span class="line">    setMeasuredDimension(mRecyclerView.mTempRect, widthSpec, heightSpec);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>看来最后还是要看下setMeasuredDimension方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMeasuredDimension</span><span class="params">(Rect childrenBounds, <span class="keyword">int</span> wSpec, <span class="keyword">int</span> hSpec)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> usedWidth = childrenBounds.width() + getPaddingLeft() + getPaddingRight();</span><br><span class="line">    <span class="comment">// 子View的高度：padding + height</span></span><br><span class="line">    <span class="keyword">int</span> usedHeight = childrenBounds.height() + getPaddingTop() + getPaddingBottom();</span><br><span class="line">    <span class="keyword">int</span> width = chooseSize(wSpec, usedWidth, getMinimumWidth());</span><br><span class="line">    <span class="comment">// 看起来chooseSize方法是关键了</span></span><br><span class="line">    <span class="keyword">int</span> height = chooseSize(hSpec, usedHeight, getMinimumHeight());</span><br><span class="line">    <span class="comment">// 调用该方法即标志着测量的结束</span></span><br><span class="line">    setMeasuredDimension(width, height);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终，我们定位到：RecyclerView高度的确定重点依靠chooseSize方法，我们来看看：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">chooseSize</span><span class="params">(<span class="keyword">int</span> spec, <span class="keyword">int</span> desired, <span class="keyword">int</span> min)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> mode = View.MeasureSpec.getMode(spec);</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">int</span> size = View.MeasureSpec.getSize(spec);</span><br><span class="line">    <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">        <span class="keyword">case</span> View.MeasureSpec.EXACTLY:</span><br><span class="line">            <span class="keyword">return</span> size;</span><br><span class="line">        <span class="keyword">case</span> View.MeasureSpec.AT_MOST:</span><br><span class="line">            <span class="keyword">return</span> Math.min(size, Math.max(desired, min));</span><br><span class="line">        <span class="keyword">case</span> View.MeasureSpec.UNSPECIFIED:</span><br><span class="line">        <span class="keyword">default</span>:</span><br><span class="line">            <span class="comment">// 这里的desired便是setMeasuredDimension中的子View的高度</span></span><br><span class="line">            <span class="keyword">return</span> Math.max(desired, min);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里我们又发现了熟悉的老朋友MeasureSpec，并且这里我们看到了测量模式为UNSPECIFIED的情况下RecyclerView的处理：<strong>返回了RecyclerView中子View的高度与最小值两者之间的最大值。</strong></p>
+<p>这也就是我们上面介绍的UNSPECIFIED的意义：不对布局大小做限制，即你想要多大就多大。最终RecyclerView的高度就是所有子View的高度了。</p>
+<h3 id="问题找到了"><a href="#问题找到了" class="headerlink" title="问题找到了"></a><strong>问题找到了</strong></h3><p>通过上面的探索，我相信在坐的各位应该很清楚问题的原因了：</p>
+<p>NestedScrollView传递给子View的测量模式为UNSPECIFIED，RecyclerView在UNSPECIFIED的测量模式下，会不限制自身的高度，即RecyclerView的窗口高度将会变成所有item高度累加后加上paddding的高度。因此，表现出来就是item一次性全部加载完成。</p>
+<p>这样做在RecyclerView的item数量较少的时候可能没什么问题，但是如果item数量比较多，随之带来的性能问题就会很严重。</p>
+<p>所以这里我斗胆发出不一样的声音：<strong>禁止使用NestedScrollView嵌套RecyclerView。</strong></p>
+<h1 id="6这种布局该怎么实现"><a href="#6这种布局该怎么实现" class="headerlink" title="6这种布局该怎么实现"></a>6这种布局该怎么实现</h1><p>推荐使用RecyclerView的多样式布局实现，毕竟RecyclerView自带滑动，没必要外层套一个ScrollerView或者NestedScrollView。或者使用CoordinatorLayout布局，玩出更多花样～</p>
+<h2 id><a href="#" class="headerlink" title=" "></a> </h2><h2 id="写在最后"><a href="#写在最后" class="headerlink" title="写在最后"></a><strong>写在最后</strong></h2><p>这篇文章发出来之前，我的内心也是充满忐忑的，毕竟开始接触Android的时候，我也是觉得《阿里巴巴Android开发手册》是不可能错的。没想到文章的反响会这么大，针对评论里提的比较多的话题这里做一个统一的回复：</p>
+<p><strong>Q: RecyclerView的高度不使用WRAP_CONTENT而是使用特定的值(比如200dp)是不是就没有这个问题了？</strong></p>
+<p>A：答案是肯定的，通过任玉刚大佬总结的表我们也可以知道：只有当Parent的测量模式为UNSPECIFIED、子View的layoutparams中的高度设定为WRAP_CONTENT或者MATCH_PARENT时，子View的测量模式才为UNSPECIFIED。</p>
+<p><strong>Q: 《阿里巴巴Android开发手册》中并不是倡导大家使用NestedScrollView嵌套RecyclerView，而是提倡大家使用NestedScrollView嵌套RecyclerView的方案替换ScrollView嵌套RecyclerView的方案。</strong></p>
+<p>A：不排除这种情况，可是NestedScrollView嵌套RecyclerView确实会有问题，除了对性能的影响外，如果项目中在onAttachViewToWindow中有其他操作（比如曝光）就会影响该操作的准确程度了，这点《阿里巴巴Android开发手册》没有提到，这篇文章的初衷也只是让大家对NestedScrollView嵌套RecyclerView的缺点有一个具体的认知，而且，我个人对于不分情况的使用NestedScrollView嵌套RecyclerView并不认同。</p>
+<p><strong>Q: RecyclerView的数据量小的时候，可以使用NestedScrollView嵌套RecyclerView么？</strong></p>
+<p>A：RecyclerView数量可控的情况下，使用NestedScrollView嵌套RecyclerView可能确实不会有性能上的问题，如果在Adapter中没有对onAttachViewToWindow方法做任何扩展，也确实没有其他的影响。</p>
+<p>但是站在个人立场下我还是不推荐这么做：RecyclerView本身支持滑动，没有必要在外层嵌套NestedScrollView，NestedScrollView嵌套RecyclerView的方案除了开发的时候节省了些许时间外其他没有一点好处。</p>
+<p>当然，写这篇文章也不是就要求大家一定按照这样的方式去实现，毕竟别人说的再好，不一定适合你的项目。</p>
+<p><strong>最后，个人始终觉得《阿里巴巴Android开发手册》是一本好手册，上面确实提供了很多Android开发的开发者注意不到的地方，个人也从中获益匪浅，这片文章也只是针对其中的一点谈了一些自己不一样的理解，毕竟开源平台“百家争鸣”。</strong></p>
+<p>最后的最后，谢谢你们喜欢我的文章，不胜感激。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'block') {qr.style.display='block';} else {qr.style.display='block'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="nbwzlyd 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="nbwzlyd 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/安卓开发/" rel="tag"> <i class="fa fa-tag"></i> 安卓开发</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/10/一切为了营收！如何从推广短信链接唤起-App-？/" rel="next" title="一切为了营收！如何从推广短信链接唤起 App ？">
+                <i class="fa fa-chevron-left"></i> 一切为了营收！如何从推广短信链接唤起 App ？
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjUyMi8yMzAzMg=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="nbwzlyd">
+            
+              <p class="site-author-name" itemprop="name">nbwzlyd</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Header为什么不能滚动了"><span class="nav-number">1.</span> <span class="nav-text">Header为什么不能滚动了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#View的绘制流程"><span class="nav-number">2.</span> <span class="nav-text">View的绘制流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RecyclerView的测量出现问题了么？"><span class="nav-number">3.</span> <span class="nav-text">RecyclerView的测量出现问题了么？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#问题找到了"><span class="nav-number">4.</span> <span class="nav-text">问题找到了</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#6这种布局该怎么实现"><span class="nav-number"></span> <span class="nav-text">6这种布局该怎么实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#null"><span class="nav-number"></span> <span class="nav-text"> </span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#写在最后"><span class="nav-number"></span> <span class="nav-text">写在最后</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">nbwzlyd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
