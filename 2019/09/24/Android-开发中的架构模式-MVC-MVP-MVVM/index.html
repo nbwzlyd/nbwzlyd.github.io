@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="设计架构,">
+
+
+
+
+
+
+
+
+
+
+<meta name="keywords" content="设计架构">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 开发中的架构模式 -- MVC &#x2F; MVP &#x2F; MVVM">
+<meta property="og:url" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/index.html">
+<meta property="og:site_name" content="安卓小屋">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174310763.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174441953.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174656990.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924175232647.png">
+<meta property="og:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924175651135.png">
+<meta property="og:updated_time" content="2019-09-24T10:00:48.429Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 开发中的架构模式 -- MVC &#x2F; MVP &#x2F; MVVM">
+<meta name="twitter:image" content="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174310763.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/">
+
+
+
+
+
+  <title>Android 开发中的架构模式 -- MVC / MVP / MVVM | 安卓小屋</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">安卓小屋</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">记录开发点点滴滴</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://nbwzlyd.github.io/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="nbwzlyd">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="安卓小屋">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 开发中的架构模式 -- MVC / MVP / MVVM</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-09-24T17:41:41+08:00">
+                2019-09-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i> 浏览
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  5.2k字
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  22分钟
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174310763.png" alt="image-20190924174310763"></p>
+ <a id="more"></a>
+
+<p><strong>常见的架构模式有哪些</strong></p>
+<p>对于我们 Android 开发者来说，常见的架构模式基本上就是 MVC，MVP，MVVM，这三种也是开发 GUI 应用程序常见的模式。</p>
+<p>除此之外还有 分层模式，客户端-服务器模式(CS模式)，主从模式，管道过滤器模式，事件总线模式 等等。</p>
+<p>这篇文章还是具体分析 MVC，MVP，MVVM 这三种架构模式。</p>
+<p><strong>二、不使用架构之前 App 是怎么开发的</strong></p>
+<p>我们在了解架构的定义以后，可能会想，为什么要用这些架构模式呢？在我们不了解这些模式之前，也是一样的开发。类似设计模式，其实架构模式的目的不是为了让应用软件开发出来，而是让结构更清晰，分工更明确，扩展更方便等等。</p>
+<p>我们可以看看，在不使用架构模式之前我们是怎么开发的。</p>
+<p>举个简单的栗子，我们界面上有 EditText，TextView，Button 三个控件，要实现的功能也比较简单：</p>
+<ol>
+<li>EditText 接受用户输入的内容</li>
+</ol>
+<ol start="2">
+<li>处理用户输入的数据</li>
+</ol>
+<ol start="3">
+<li>数据处理后输出到 TextView 中</li>
+</ol>
+<ol start="4">
+<li>点击 Button 清空用户的输入</li>
+</ol>
+<p>界面如下：</p>
+<p><img src="/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174441953.png" alt="image-20190924174441953"></p>
+<p>我们看看不使用架构模式是怎么开发的，也就是我们一般常用的开发方式：</p>
+<ol>
+<li><p>首先在 xml 设计界面</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">LinearLayout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">android:padding</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">tools:context</span>=<span class="string">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/titleText"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"Normal"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/edit"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"50dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textColor</span>=<span class="string">"@android:color/darker_gray"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/msgText"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"30dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"default msg"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textColor</span>=<span class="string">"@android:color/darker_gray"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:id</span>=<span class="string">"@+id/clearText"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"30dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:background</span>=<span class="string">"@color/colorPrimary"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:text</span>=<span class="string">"clear"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:textColor</span>=<span class="string">"@android:color/white"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>在 Activity / Fragment 中获取 View，进行事件监听</li>
+</ol>
+</li>
+</ol>
+<ol start="2">
+<li>通过 View 事件获取数据后进行处理</li>
+</ol>
+<ol start="3">
+<li><p>设置处理后的数据给 View 代码如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NormalFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span>: Fragment &#123;</span><br><span class="line">            <span class="keyword">return</span> NormalFragment()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> handler: Handler = Handler()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.architecture, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        titleText.text = <span class="string">"NORMAL"</span></span><br><span class="line">        edit.addTextChangedListener(<span class="keyword">object</span> : TextWatcher &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">afterTextChanged</span><span class="params">(s: <span class="type">Editable</span>?)</span></span> &#123;</span><br><span class="line">                handleData(s.toString())</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">beforeTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, count: <span class="type">Int</span>, after: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, before: <span class="type">Int</span>, count: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        clearText.setOnClickListener &#123;</span><br><span class="line">            edit.setText(<span class="string">""</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 数据的处理，真实情况下可能是网络请求，磁盘存取，大量计算逻辑等等</span></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(<span class="keyword">data</span>)) &#123;</span><br><span class="line">            msgText.text = <span class="string">"default msg"</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        msgText.text = <span class="string">"handle data ..."</span></span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 延迟来模拟网络或者磁盘操作</span></span><br><span class="line">        handler.postDelayed(&#123;</span><br><span class="line">            msgText.text = <span class="string">"handled data: <span class="variable">$data</span>"</span></span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>默认开发方式的缺点：</strong><br>我们来分析一下上面的代码，一个明显的特点就是处理逻辑都集中在了 Activity / Fragment 中，不管是对 View 的操作，还是对数据的处理。</p>
+</li>
+</ol>
+<pre><code>带来的问题就是 Activity / Fragment 中逻辑臃肿，后续扩展牵一发而动全身。而
+
+
+
+且职责划分不清晰，给后续维护也带来了困难。
+
+
+既然如此，我们看看使用架构模式改造后是什么样子的。
+
+#MVC 架构
+
+
+
+
+
+ 模式介绍
+
+其实关于 MVC 架构，在不同的框架里，实现会有些差别，这也正说明了架构是一种思想。我们这里选用一种比较主流的实现。</code></pre><p><img src="/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924174656990.png" alt="image-20190924174656990"></p>
+<h5 id="1-解决什么问题"><a href="#1-解决什么问题" class="headerlink" title="1. 解决什么问题"></a>1. 解决什么问题</h5><p>我们可以看到，上面不使用架构进行开发，带来的问题是 Activity / Fragment 逻辑臃肿，不利于扩展。所以 MVC 就要解决的问题就是：<strong>控制逻辑，数据处理逻辑和界面交互耦合</strong>。</p>
+<p><em>这里先插一个题外话，其实我们作为程序员，写代码不仅要实现需求，还要让代码易读，易扩展。**这一点，往往也能体现功力，并不是说使用了各种奇技淫巧才是大神。</em></p>
+<p>不知道大家是否有接触过 Java Swing 桌面应用开发，在 Java Swing 中，界面 / 控件的设置，也是用 Java 代码来实现的，如果不采用架构，最后的结果就是控制逻辑，数据处理以及页面展示的代码都集中在一个类中，读者朋友们可以想象一下，这样的代码简直是难以维护。</p>
+<h5 id="2-如何划分角色"><a href="#2-如何划分角色" class="headerlink" title="2. 如何划分角色"></a>2. 如何划分角色</h5><p>为了解决上面的问题，MVC 架构里，将逻辑，数据，界面的处理划分为三个部分，模型(Model)-视图(View)-控制器(Controller)。各个部分的功能如下：</p>
+<ul>
+<li>Model 模型，负责数据的加载和存储。</li>
+</ul>
+<ul>
+<li>View 视图，负责界面的展示。</li>
+</ul>
+<ul>
+<li>Controller 控制器，负责逻辑控制。</li>
+</ul>
+<h5 id="3-如何通信（数据的流向）"><a href="#3-如何通信（数据的流向）" class="headerlink" title="3. 如何通信（数据的流向）"></a>3. 如何通信（数据的流向）</h5><p>我们再看看三者之间是怎么通信的。</p>
+<p>在介绍通信之前，我们先解释一下通信中的数据是什么。其实在 Android 开发中，通信数据可以理解为两种，一种是<strong>数据结构</strong>，也就是网络请求，本地存储等通信使用的 JavaBean，另一种是<strong>事件</strong>，也就是控件产生的动作，包括触摸，点击，滑动等等。我们在通信过程中，也主要关注这两种数据。</p>
+<p>在 MVC 架构中，View 产生<strong>事件</strong>，通知到 Controller，Controller 中进行一系列<em>逻辑处理</em>，之后通知给 Model 去<em>更新数据</em>，Model 更新数据后，再将<strong>数据结构</strong>通知给 View 去更新界面。</p>
+<p>这就是一个完整 MVC 的数据流向。</p>
+<p><strong>在 Android 中的具体实现</strong></p>
+<p>理解了 MVC 模式，我们看看其具体实现。</p>
+<p>其实在 Android 开发中，其本身默认可以理解为 MVC 结构，把 View 放在 xml 中与 Java 代码解耦，然后 Activity / Fragment 充当 Controller 进行逻辑控制，但是 Android 本身并没有对 Model 进行划分，所以往往我们会让 Activity / Fragment 充当 Model 和 Controller 两个角色。而且往往 xml 中的 View 操作也是在 Activity / Fragment 中，导致有时候 Activity / Fragment 也会充当一些 View 的角色。</p>
+<p>所以我们在具体实现过程中，要把职责划分清楚，这里我们让 Fragment 充当 View 的角色，把 Model 和 Controller 的逻辑划分清楚。<br>我们先定义三个接口如下：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 数据模型接口，定义了数据模型的操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IModel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setView</span><span class="params">(view: <span class="type">IView</span>)</span></span></span><br><span class="line">    <span class="comment">// 数据模型处理输入的数据</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">    <span class="comment">// 清空数据</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 视图接口，定义视图的操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IView</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setController</span><span class="params">(controller: <span class="type">IController</span>)</span></span></span><br><span class="line">    <span class="comment">// 数据处理中状态</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">dataHanding</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">// 数据处理完成，更新界面</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onDataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制器接口，定义控制器的逻辑</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IController</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span></span><br><span class="line">    <span class="comment">// EditText 数据变化，通知控制器</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onDataChanged</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">    <span class="comment">// 清空按钮点击事件</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面三个接口分别定义了 Model，View，Controller 的操作。有一点注意的是，根据 MVC 的通信流程，View 需要持有 Controller，Controller 需要持有 Model，Model 需要持有 View，所以需要暴露相应的接口。<br>下面我们看看具体的实现：</p>
+<ul>
+<li><strong>Model 的实现</strong></li>
+</ul>
+<p>Model 中对数据的处理是添加了 “handled data: “ 前缀，并增加了 3 秒的延迟。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HandleModel</span> : <span class="type">IModel &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> view: IView? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> handler: Handler = Handler(Looper.getMainLooper())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setView</span><span class="params">(view: <span class="type">IView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.view = view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接受到数据后，进行处理，这里设置了 3 秒的延迟，模拟网络请求处理数据的操作</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(<span class="keyword">data</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        view?.dataHanding()</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 延迟来模拟网络或者磁盘操作</span></span><br><span class="line">        handler.postDelayed(&#123;</span><br><span class="line">            <span class="comment">// 数据处理完成，通知 View 更新界面</span></span><br><span class="line">            view?.onDataHandled(<span class="string">"handled data: <span class="variable">$data</span>"</span>)</span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接收到清空数据的事件，直接清空数据</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 数据清空后，通知 View 更新界面</span></span><br><span class="line">        view?.onDataHandled(<span class="string">""</span>)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>Controller 的实现</strong></li>
+</ul>
+<p>Controller 的实现比较简单，将操作直接转发给 Model，实际上，对于复杂的业务场景，这里要处理很多业务逻辑。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HandleController</span> : <span class="type">IController &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> model: IModel? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDataChanged</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        model?.handleData(<span class="keyword">data</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        model?.clearData()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>View 的实现</strong></li>
+</ul>
+<p>这里 Fragment 充当了 View 的角色，主要负责将 View 的事件传递给 Controller，以及接受到 Model 的数据进行界面更新。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MVCFragment</span> : <span class="type">Fragment</span></span>(), IView &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span>: Fragment &#123;</span><br><span class="line">            <span class="keyword">return</span> MVCFragment()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">val</span> model: IModel = HandleModel()</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> controller: IController = HandleController()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.architecture, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        setController(controller)</span><br><span class="line">        model.setView(<span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">        titleText.text = <span class="string">"MVC"</span></span><br><span class="line">        edit.addTextChangedListener(<span class="keyword">object</span> : TextWatcher &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">afterTextChanged</span><span class="params">(s: <span class="type">Editable</span>?)</span></span> &#123;</span><br><span class="line">                <span class="comment">// 通知 Controller 输入的数据产生变化</span></span><br><span class="line">                controller?.onDataChanged(s.toString())</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">beforeTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, count: <span class="type">Int</span>, after: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, before: <span class="type">Int</span>, count: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        clearText.setOnClickListener &#123;</span><br><span class="line">            <span class="comment">// 通知 Controller 清空数据事件</span></span><br><span class="line">            controller?.clearData()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Model 数据变化，进行界面更新</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onDataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(<span class="keyword">data</span>)) &#123;</span><br><span class="line">            edit.setText(<span class="string">""</span>)</span><br><span class="line">            msgText.text = <span class="string">"default msg"</span></span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            msgText.text = <span class="keyword">data</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Model 数据变化，进行界面更新</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dataHanding</span><span class="params">()</span></span> &#123;</span><br><span class="line">        msgText.text = <span class="string">"handle data ..."</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setController</span><span class="params">(controller: <span class="type">IController</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.controller = controller</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>MVC 架构模式的优缺点</strong></p>
+<p>优点：</p>
+<ol>
+<li>结构清晰，职责划分清晰</li>
+<li>降低耦合</li>
+<li>有利于组件重用</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>其实我们上述的示例，已经是经过优化的 MVC 结构了，一般来说，Activity / Fragment 会承担 View 和 Controller 两个角色，就会导致 Activity / Fragment 中代码较多</li>
+<li>Model 直接操作 View，View 的修改会导致 Controller 和 Model 都进行改动</li>
+<li>增加了代码结构的复杂性</li>
+</ol>
+<h1 id="MVP-架构"><a href="#MVP-架构" class="headerlink" title="MVP 架构"></a>MVP 架构</h1><p><strong>模式介绍</strong></p>
+<p><img src="/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924175232647.png" alt="image-20190924175232647"></p>
+<h5 id="1-解决什么问题-1"><a href="#1-解决什么问题-1" class="headerlink" title="1. 解决什么问题"></a>1. 解决什么问题</h5><p>MVP 要解决的问题和 MVC 大同小异：<strong>控制逻辑，数据处理逻辑和界面交互耦合，同时能将 MVC 中的 View 和 Model 解耦</strong>。</p>
+<h5 id="2-如何划分角色-1"><a href="#2-如何划分角色-1" class="headerlink" title="2. 如何划分角色"></a>2. 如何划分角色</h5><p>MVP 架构里，将逻辑，数据，界面的处理划分为三个部分，模型(Model)-视图(View)-控制器(Presenter)。各个部分的功能如下：</p>
+<ul>
+<li>Model 模型，负责数据的加载和存储</li>
+</ul>
+<ul>
+<li>View 视图，负责界面的展示</li>
+</ul>
+<ul>
+<li>Presenter 控制器，负责逻辑控制</li>
+</ul>
+<h5 id="3-如何通信（数据的流向）-1"><a href="#3-如何通信（数据的流向）-1" class="headerlink" title="3. 如何通信（数据的流向）"></a>3. 如何通信（数据的流向）</h5><p>我们可以看到，MVP 中的各个角色划分，和 MVC 基本上相似，那么区别在哪里呢？区别就在角色的通信上。</p>
+<p>MVP 和 MVC 最大的不同，就是 View 和 Model 不相互持有，都通过 Presenter 做中转。View 产生<strong>事件</strong>，通知给 Presenter，Presenter 中进行<em>逻辑处理</em>后，通知 Model <em>更新数据</em>，Model 更新数据后，通知<strong>数据结构</strong>给 Presenter，Presenter 再通知 View 更新界面。</p>
+<p>这就是一个完整 MVP 的数据流向。</p>
+<p><strong>在 Android 中的实现</strong></p>
+<p>理解了 MVP 之后，我们看一下其具体实现。<br>首先我们定义三个接口：</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 模型接口，定义了数据模型的操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IModel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setPresenter</span><span class="params">(presenter: <span class="type">IPresenter</span>)</span></span></span><br><span class="line">    <span class="comment">// 梳理数据</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">    <span class="comment">// 清除数据</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 视图接口，定义了视图的操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IView</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setPresenter</span><span class="params">(presenter: <span class="type">IPresenter</span>)</span></span></span><br><span class="line">    <span class="comment">// 数据处理中视图</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">loading</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">// 数据展示</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">showData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 控制器，定义了逻辑操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IPresenter</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setView</span><span class="params">(view: <span class="type">IView</span>)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span></span><br><span class="line">    <span class="comment">// Model 处理完成数据通知 Presenter</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">dataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span></span><br><span class="line">    <span class="comment">// Model 清除数据后通知 Presenter</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">dataCleared</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">// View 中 EditText 文字变化后通知 Presenter</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onTextChanged</span><span class="params">(text: <span class="type">String</span>)</span></span></span><br><span class="line">    <span class="comment">// View 中 Button 点击事件通知 Presenter</span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">onClearBtnClicked</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面定义了 View，Model，Presenter 三个接口，其中 View 和 Model 会持有 Presenter，Presenter 持有 View 和 Model。<br>接着看下接口的实现：</p>
+<ul>
+<li><p><strong>Model 的实现</strong></p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HandleModel</span> : <span class="type">IModel &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> presenter: IPresenter? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> handler = Handler(Looper.getMainLooper())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(<span class="keyword">data</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 延迟来模拟网络或者磁盘操作</span></span><br><span class="line">        handler.postDelayed(&#123;</span><br><span class="line">            <span class="comment">// 数据处理完成，通知 Presenter</span></span><br><span class="line">            presenter?.dataHandled(<span class="string">"handled data: <span class="variable">$data</span>"</span>)</span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 数据清理完成，通知 Presenter</span></span><br><span class="line">        presenter?.dataCleared()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setPresenter</span><span class="params">(presenter: <span class="type">IPresenter</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.presenter = presenter</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Model 的实现和前面 MVC 中的实现基本一致，不过在 MVC 中 Model 直接操作 View 进行视图展示，而在 MVP 里，要通知 Presenter 去中转。</p>
+</li>
+</ul>
+<ul>
+<li><p><strong>View 的实现</strong></p>
+<p>这里依旧是 Fragment 充当了 View 的角色，主要负责将 View 的事件传递给 Presenter，以及接受到 Presenter 的数据进行界面更新。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MVPFragment</span> : <span class="type">Fragment</span></span>(), IView &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span>: Fragment &#123;</span><br><span class="line">            <span class="keyword">val</span> presenter = Presenter()</span><br><span class="line">            <span class="keyword">val</span> fragment = MVPFragment()</span><br><span class="line">            <span class="keyword">val</span> model = HandleModel()</span><br><span class="line">            fragment.setPresenter(presenter)</span><br><span class="line">            model.setPresenter(presenter)</span><br><span class="line">            presenter.setModel(model)</span><br><span class="line">            presenter.setView(fragment)</span><br><span class="line">            <span class="keyword">return</span> fragment</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> mpresenter: IPresenter? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="keyword">return</span> inflater.inflate(R.layout.architecture, container, <span class="literal">false</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onViewCreated</span><span class="params">(view: <span class="type">View</span>, savedInstanceState: <span class="type">Bundle</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">super</span>.onViewCreated(view, savedInstanceState)</span><br><span class="line">        titleText.text = <span class="string">"MVP"</span></span><br><span class="line"></span><br><span class="line">        edit.addTextChangedListener(<span class="keyword">object</span> : TextWatcher &#123;</span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">afterTextChanged</span><span class="params">(s: <span class="type">Editable</span>?)</span></span> &#123;</span><br><span class="line">                <span class="comment">// 传递 文字修改 事件给 Presenter</span></span><br><span class="line">                mpresenter?.onTextChanged(s.toString())</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">beforeTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, count: <span class="type">Int</span>, after: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTextChanged</span><span class="params">(s: <span class="type">CharSequence</span>?, start: <span class="type">Int</span>, before: <span class="type">Int</span>, count: <span class="type">Int</span>)</span></span> &#123;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;)</span><br><span class="line">        clearText.setOnClickListener &#123;</span><br><span class="line">            <span class="comment">// 传递按钮点击事件给 Presenter</span></span><br><span class="line">            mpresenter?.onClearBtnClicked()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setPresenter</span><span class="params">(presenter: <span class="type">IPresenter</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.mpresenter = presenter</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 展示数据处理中的视图</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">loading</span><span class="params">()</span></span> &#123;</span><br><span class="line">        msgText.text = <span class="string">"handling data ..."</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 展示处理后的数据</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">showData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        msgText.text = <span class="keyword">data</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Presenter 的实现</strong></p>
+<p>这里 Presenter 的实现比较简单，没有太多的业务逻辑，实际应用中，这里会进行业务逻辑的处理。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Presenter</span> : <span class="type">IPresenter &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> model: IModel? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> view: IView? = <span class="literal">null</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.model = model</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setView</span><span class="params">(view: <span class="type">IView</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.view = view</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        view?.showData(<span class="keyword">data</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dataCleared</span><span class="params">()</span></span> &#123;</span><br><span class="line">        view?.showData(<span class="string">""</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onTextChanged</span><span class="params">(text: <span class="type">String</span>)</span></span> &#123;</span><br><span class="line">        view?.loading()</span><br><span class="line">        model?.handleData(text)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onClearBtnClicked</span><span class="params">()</span></span> &#123;</span><br><span class="line">        model?.clearData()</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><strong>MVP 架构模式的优缺点</strong></li>
+</ul>
+<p>优点：</p>
+<ol>
+<li>结构清晰，职责划分清晰</li>
+<li>模块间充分解耦</li>
+<li>有利于组件的重用</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>会引入大量的接口，导致项目文件数量激增</li>
+<li>增大代码结构复杂性</li>
+</ol>
+<h1 id="MVVM-架构"><a href="#MVVM-架构" class="headerlink" title="MVVM 架构"></a><strong>MVVM 架构</strong></h1><p><strong>模式介绍</strong></p>
+<p><img src="/2019/09/24/Android-开发中的架构模式-MVC-MVP-MVVM/image-20190924175651135.png" alt="image-20190924175651135"></p>
+<h5 id="1-解决什么问题-2"><a href="#1-解决什么问题-2" class="headerlink" title="1. 解决什么问题"></a>1. 解决什么问题</h5><p>MVVM 要解决的问题和 MVC，MVP 大同小异：<strong>控制逻辑，数据处理逻辑和界面交互耦合</strong>，并且同时能将 MVC 中的 View 和 Model 解耦，还可以把 MVP 中 Presenter 和 View 也解耦。</p>
+<h5 id="2-如何划分角色-2"><a href="#2-如何划分角色-2" class="headerlink" title="2. 如何划分角色"></a>2. 如何划分角色</h5><p>MVVM 架构里，将逻辑，数据，界面的处理划分为三个部分，模型(Model)-视图(View)-逻辑(ViewModel)。各个部分的功能如下：</p>
+<ul>
+<li>Model 模型，负责数据的加载和存储</li>
+</ul>
+<ul>
+<li>View 视图，负责界面的展示</li>
+</ul>
+<ul>
+<li>ViewModel 控制器，负责逻辑控制</li>
+</ul>
+<h5 id="3-如何通信（数据的流向）-2"><a href="#3-如何通信（数据的流向）-2" class="headerlink" title="3. 如何通信（数据的流向）"></a>3. 如何通信（数据的流向）</h5><p>我们可以看到，MVP 中的各个角色划分，和 MVC，MVP 基本上相似，区别也是在于角色的通信上。</p>
+<p>我们上面说到，在 MVP 中，就是 View 和 Model 不相互持有，都通过 Presenter 做中转。这样可以使 View 和 Model 解耦。</p>
+<p>而在 MVVM 中，解耦做的更彻底，ViewModel 也不会持有 View。其中 ViewModel 中的改动，会自动反馈给 View 进行界面更新，而 View 中的事件，也会自动反馈给 ViewModel。</p>
+<p>要达到这个效果，当然要使用一些工具辅助，比较常用的就是 databinding。<br>在 MVVM 中，数据的流向是这样的：<br>View 产生<strong>事件</strong>，<strong>自动</strong>通知给 ViewMode，ViewModel 中进行<em>逻辑处理</em>后，通知 Model <em>更新数据</em>，Model 更新数据后，通知<strong>数据结构</strong>给 ViewModel，ViewModel <strong>自动</strong>通知 View 更新界面。</p>
+<p>这就是一个完整 MVVM 的数据流向。</p>
+<p><strong>在 Android 中的实现</strong></p>
+<p>MVVM 的实现会复杂一点，我们先看下接口的定义：</p>
+ <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ViewModel 接口，定义了逻辑操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IViewModel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">handleText</span><span class="params">(text: <span class="type">String</span>?)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">dataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>?)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">dataCleared</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 模型接口，定义了数据操作</span></span><br><span class="line"><span class="class"><span class="keyword">interface</span> <span class="title">IModel</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">setViewModel</span><span class="params">(viewModel: <span class="type">IViewModel</span>)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>?)</span></span></span><br><span class="line">    <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>MVVM 中的接口只定义了 ViewModel 和 Model，没有 View 接口，是因为 View 是通过 databind 和 ViewModel 的。<br>我们再看看具体实现：</p>
+<ul>
+<li><strong>Model 实现</strong></li>
+</ul>
+<p>Model 的实现和上面基本一致，就是对数据的处理，处理完成后通知 ViewModel。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">HandleModel</span> : <span class="type">IModel &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> viewModel: IViewModel? = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> handler = Handler(Looper.getMainLooper())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleData</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(<span class="keyword">data</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 延迟来模拟网络或者磁盘操作</span></span><br><span class="line">        handler.postDelayed(&#123;</span><br><span class="line">            <span class="comment">// 数据处理完成通知 ViewModel</span></span><br><span class="line">            viewModel?.dataHandled(<span class="string">"handled data: <span class="variable">$data</span>"</span>)</span><br><span class="line">        &#125;, <span class="number">3000</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        handler.removeCallbacksAndMessages(<span class="literal">null</span>)</span><br><span class="line">        <span class="comment">// 数据清理完成通知 ViewModel</span></span><br><span class="line">        viewModel?.dataCleared()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setViewModel</span><span class="params">(viewModel: <span class="type">IViewModel</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.viewModel = viewModel</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>ViewModel 实现</strong></li>
+</ul>
+<p>ViewModel 的实现要有些不同，我们采用 databind 进行 ViewModel 和 View 的绑定。其中会定义两个变量，inputText 是和 EditText 双向绑定的数据，handledText 是和 TextView 双向绑定的数据。当 EditText 中输入的数据有变化，会通知到 inputText 注册的监听器中，而 handledText 值的改变，会自动显示到界面上。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ViewModel</span> : <span class="type">IViewModel &#123;</span></span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">var</span> model: IModel? = <span class="literal">null</span></span><br><span class="line">    <span class="comment">// View 绑定的数据，inputText 和 handledText 更新后会自动通知 View 更新界面</span></span><br><span class="line">    <span class="keyword">var</span> inputText: MutableLiveData&lt;String&gt; = MutableLiveData()</span><br><span class="line">    <span class="keyword">var</span> handledText: MutableLiveData&lt;String&gt; = MutableLiveData()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">init</span> &#123;</span><br><span class="line">        <span class="comment">// 注册数据监听，数据改变后通知 Model 去处理数据</span></span><br><span class="line">        inputText.observeForever &#123;</span><br><span class="line">            handleText(it)</span><br><span class="line">        &#125;</span><br><span class="line">        handledText.value = <span class="string">"default msg"</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">handleText</span><span class="params">(text: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (TextUtils.isEmpty(text)) &#123;</span><br><span class="line">            handledText.value = <span class="string">"default msg"</span></span><br><span class="line">            <span class="keyword">return</span></span><br><span class="line">        &#125;</span><br><span class="line">        handledText.value = <span class="string">"handle data ..."</span></span><br><span class="line">        model?.handleData(text)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 清空按钮的点击事件绑定</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">clearData</span><span class="params">()</span></span> &#123;</span><br><span class="line">        model?.clearData()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">setModel</span><span class="params">(model: <span class="type">IModel</span>)</span></span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.model = model</span><br><span class="line">        model.setViewModel(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Model 数据处理完成，设置 handledText 的值，自动更新到界面</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dataHandled</span><span class="params">(<span class="keyword">data</span>: <span class="type">String</span>?)</span></span> &#123;</span><br><span class="line">        handledText.value = <span class="keyword">data</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Model 数据处理完成，设置 inputText 的值，自动更新到界面</span></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">dataCleared</span><span class="params">()</span></span> &#123;</span><br><span class="line">        inputText.value = <span class="string">""</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>View 实现</strong></li>
+</ul>
+<p>看一下 View 中的数据绑定。</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MVVMFragment</span> : <span class="type">Fragment</span></span>() &#123;</span><br><span class="line">    <span class="keyword">companion</span> <span class="keyword">object</span> &#123;</span><br><span class="line">        <span class="function"><span class="keyword">fun</span> <span class="title">newInstance</span><span class="params">()</span></span>: Fragment &#123;</span><br><span class="line">            <span class="keyword">return</span> MVVMFragment()</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">override</span> <span class="function"><span class="keyword">fun</span> <span class="title">onCreateView</span><span class="params">(inflater: <span class="type">LayoutInflater</span>, container: <span class="type">ViewGroup</span>?, savedInstanceState: <span class="type">Bundle</span>?)</span></span>: View? &#123;</span><br><span class="line">        <span class="comment">// 使用 databind 进行数据绑定</span></span><br><span class="line">        <span class="keyword">var</span> binding: ArchitectureBindingBinding = DataBindingUtil.inflate(inflater, R.layout.architecture_binding, container, <span class="literal">false</span>)</span><br><span class="line">        binding.lifecycleOwner = <span class="keyword">this</span></span><br><span class="line">        <span class="keyword">val</span> viewModel = ViewModel()</span><br><span class="line">        viewModel.setModel(HandleModel())</span><br><span class="line">        binding.viewmodel = viewModel</span><br><span class="line">        <span class="keyword">return</span> binding.root</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">layout</span> <span class="attr">xmlns:android</span>=<span class="string">"http://schemas.android.com/apk/res/android"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:app</span>=<span class="string">"http://schemas.android.com/apk/res-auto"</span></span></span><br><span class="line"><span class="tag">    <span class="attr">xmlns:tools</span>=<span class="string">"http://schemas.android.com/tools"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!--定义 View 中绑定的数据--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">data</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">variable</span></span></span><br><span class="line"><span class="tag">            <span class="attr">name</span>=<span class="string">"viewmodel"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">type</span>=<span class="string">"com.zy.architecture.mvvm.ViewModel"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">data</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">LinearLayout</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:layout_height</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:orientation</span>=<span class="string">"vertical"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">android:padding</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">        <span class="attr">tools:context</span>=<span class="string">".MainActivity"</span>&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/titleText"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"MVVM"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!--双向绑定 inputText 到 EditText--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">EditText</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/edit"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"50dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"@=&#123;viewmodel.inputText&#125;"</span> </span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"@android:color/darker_gray"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!--绑定 handledText 到 TextView--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/msgText"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"wrap_content"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"30dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"@&#123;viewmodel.handledText&#125;"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"@android:color/darker_gray"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!--绑定清空数据的点击事件 到 TextView--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">TextView</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:id</span>=<span class="string">"@+id/clearText"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_width</span>=<span class="string">"match_parent"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_height</span>=<span class="string">"30dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:layout_marginTop</span>=<span class="string">"10dp"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:background</span>=<span class="string">"@color/colorPrimary"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:gravity</span>=<span class="string">"center"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:onClick</span>=<span class="string">"@&#123;() -&gt; viewmodel.clearData()&#125;"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:text</span>=<span class="string">"clear"</span></span></span><br><span class="line"><span class="tag">            <span class="attr">android:textColor</span>=<span class="string">"@android:color/white"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">LinearLayout</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">layout</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>通过上面的实现，当 EditText 中文字变化后，会自动修改 inputText 的值，触发 inputText 监听器，此时 ViewModel 将消息传递给 Model 进行处理，Model 数据处理完成后，通知 ViewModel 更新 handledText 的值，自动更新到界面上。</p>
+<p>点击清空按钮时，自动调用绑定的点击函数，通知 ViewModel 清空事件，ViewModel 将消息传递给 Model 进行数据清空，Model 数据处理完成后，通知 ViewModel 进行界面更新、</p>
+<p><strong>MVVM 架构模式的优缺点</strong></p>
+<p>优点：</p>
+<ol>
+<li><p>结构清晰，职责划分清晰</p>
+</li>
+<li><p>模块间充分解耦</p>
+</li>
+<li><p>在 MVP 的基础上，MVVM 把 View 和 ViewModel 也进行了解耦</p>
+</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>Debug 困难，由于 View 和 ViewModel 解耦，导致 Debug 时难以一眼看出 View 的事件传递</li>
+<li>代码复杂性增大</li>
+</ol>
+<h1 id="架构模式的运用"><a href="#架构模式的运用" class="headerlink" title="架构模式的运用"></a>架构模式的运用</h1><p>上面的文章中，我们介绍了 MVC，MVP，MVVM 三种架构模式，以及其简单的实现。这里我们再回过头思考一下，什么时候该使用架构模式呢？</p>
+<p>架构模式可以使代码模块清晰，职责分工明确，容易扩展，带来的副作用就是会引入大量的接口，导致代码文件数量激增。</p>
+<p>我们在最开始说过，架构模式是用来解决特定的问题的，如果特定的问题在目前阶段不是问题，或者不是主要问题，那么我们可以先不考虑使用架构模式。比如一个功能非常简单，代码量少，而后续又没有扩展的需求，那我们直接使用传统方式进行开发，快速且清晰，完全没有必要为了架构而架构。</p>
+<p>对于在开始没有考虑架构模式的代码，后续慢慢去<strong>重构</strong>，也是一个好的选择。</p>
+<p>总结来说就是：<strong>架构虽好，可不要贪杯哦~</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'block') {qr.style.display='block';} else {qr.style.display='block'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: block;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechat.jpg" alt="nbwzlyd 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="nbwzlyd 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/设计架构/" rel="tag"> <i class="fa fa-tag"></i> 设计架构</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/09/20/反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法/" rel="next" title="反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法">
+                <i class="fa fa-chevron-left"></i> 反对《阿里巴巴Android开发手册》中NestedScrollView嵌套RecyclerView的用法
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="lv-container" data-id="city" data-uid="MTAyMC80NjUyMi8yMzAzMg=="></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="nbwzlyd">
+            
+              <p class="site-author-name" itemprop="name">nbwzlyd</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-解决什么问题"><span class="nav-number">1.</span> <span class="nav-text">1. 解决什么问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-如何划分角色"><span class="nav-number">2.</span> <span class="nav-text">2. 如何划分角色</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-如何通信（数据的流向）"><span class="nav-number">3.</span> <span class="nav-text">3. 如何通信（数据的流向）</span></a></li></ol><li class="nav-item nav-level-1"><a class="nav-link" href="#MVP-架构"><span class="nav-number"></span> <span class="nav-text">MVP 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-解决什么问题-1"><span class="nav-number">1.</span> <span class="nav-text">1. 解决什么问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-如何划分角色-1"><span class="nav-number">2.</span> <span class="nav-text">2. 如何划分角色</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-如何通信（数据的流向）-1"><span class="nav-number">3.</span> <span class="nav-text">3. 如何通信（数据的流向）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#MVVM-架构"><span class="nav-number"></span> <span class="nav-text">MVVM 架构</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#1-解决什么问题-2"><span class="nav-number">1.</span> <span class="nav-text">1. 解决什么问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#2-如何划分角色-2"><span class="nav-number">2.</span> <span class="nav-text">2. 如何划分角色</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#3-如何通信（数据的流向）-2"><span class="nav-number">3.</span> <span class="nav-text">3. 如何通信（数据的流向）</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#架构模式的运用"><span class="nav-number"></span> <span class="nav-text">架构模式的运用</span></a></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">nbwzlyd</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i> 访问人数
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i> 总访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
