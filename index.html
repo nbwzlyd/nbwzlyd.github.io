@@ -353,7 +353,10 @@
           
           以前在遇到版本升级的时候经常会遇到版本依赖冲突，比如在升级rxjava 从2.x升级到3.x版本，由于RxAndroid因为没有及时升级，因此内部还是依赖2.x版本的RxJava,这就导致项目的依赖发生了冲突。
 通常情况下我们会这么写
-123implementation ('io.reactivex
+123implementation ('io.reactivex.rxjava2:rxandroid:2.1.0')  &#123;  exclude group: 'io.reactivex.rxjava2', module: 'rxjava'&#125;
+
+但是这样写并不优雅，假设我们有多个依赖冲突，代码就会变为下面的样子
+123456789implementation "libraryA:xxx:1.0.0",&#123;    exclude group: 'com.android.support', module: 'recyclerview-v7
           ...
           <!--noindex-->
           <div class="post-button text-center">
